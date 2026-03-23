@@ -2,6 +2,7 @@
 ;;; Another comment
 (ns fpinclojure.gettingstarted.my-module
   "A documentation comment"
+  (:refer-clojure :exclude [abs])
   (:require
    [clojure.spec.alpha :as s]))
 
