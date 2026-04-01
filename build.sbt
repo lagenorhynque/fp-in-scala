@@ -1,5 +1,5 @@
 val commonSettings = Seq(
-  scalaVersion := "3.8.2",
+  scalaVersion := "3.8.3",
   scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint")
 )
 
