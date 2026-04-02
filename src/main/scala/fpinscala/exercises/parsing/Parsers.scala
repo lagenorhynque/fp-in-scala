@@ -22,8 +22,8 @@ case class Location(input: String, offset: Int = 0):
   def slice(n: Int) = ???
 
   /* Returns the line corresponding to this location */
-  def currentLine: String = 
-    if (input.length > 1) input.linesIterator.drop(line-1).next()
+  def currentLine: String =
+    if input.length > 1 then input.linesIterator.drop(line-1).next()
     else ""
 
 case class ParseError(stack: List[(Location,String)] = List(),

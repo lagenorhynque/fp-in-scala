@@ -1,4 +1,7 @@
-package fpinscala.exercises.iomonad
+package fpinscala.answers.iomonad
+
+import scala.util.control.TailCalls.TailRec
+import scala.util.control.TailCalls
 
 trait Functor[F[_]]:
   extension [A](fa: F[A])
@@ -38,6 +41,9 @@ trait Monad[F[_]] extends Functor[F]:
     def replicateM_(n: Int): F[Unit] =
       foreachM(LazyList.fill(n)(fa))(_.void)
 
+  extension [A](ffa: F[F[A]])
+    def flatten: F[A] = ffa.flatMap(identity)
+
   def sequence_[A](fs: LazyList[F[A]]): F[Unit] = foreachM(fs)(_.void)
 
   def sequence_[A](fs: F[A]*): F[Unit] = sequence_(fs.to(LazyList))
@@ -71,6 +77,13 @@ object Monad:
     extension [A](fa: Function0[A])
       def flatMap[B](f: A => Function0[B]) =
         () => f(fa())()
+
+  given tailrecMonad: Monad[TailRec]:
+    def unit[A](a: => A) = TailCalls.done(a)
+    extension [A](fa: TailRec[A])
+      def flatMap[B](f: A => TailRec[B]) =
+        fa.flatMap(f)
+
 
   import fpinscala.answers.parallelism.Nonblocking.Par
   given parMonad: Monad[Par]:

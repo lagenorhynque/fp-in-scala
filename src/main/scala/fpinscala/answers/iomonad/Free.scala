@@ -1,4 +1,4 @@
-package fpinscala.exercises.iomonad
+package fpinscala.answers.iomonad
 
 // This file contains the final form of Free that's developed throughout the chapter.
 // See DerivingIO.scala for the step by step creation of Free.

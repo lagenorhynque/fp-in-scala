@@ -1,9 +1,10 @@
-package fpinscala.exercises.streamingio
+package fpinscala.answers.streamingio
 
 import fpinscala.answers.iomonad.{IO, Monad}
 import fpinscala.answers.monoids.Monoid
+import scala.util.{Success, Failure}
 
-object EffectfulPulls:
+object ErrorHandling:
 
   type Nothing1[A] = Nothing
 
@@ -15,9 +16,13 @@ object EffectfulPulls:
       source: Pull[F, O, X], f: X => Pull[F, O, R]) extends Pull[F, O, R]
     case Uncons[+F[_], +O, +R](source: Pull[F, O, R])
       extends Pull[F, Nothing, Either[R, (O, Pull[F, O, R])]]
+    case Handle[+F[_], +O, +R](
+      source: Pull[F, O, R], handler: Throwable => Pull[F, O, R])
+      extends Pull[F, O, R]
+    case Error(t: Throwable) extends Pull[Nothing, Nothing, Nothing]
 
     def step[F2[x] >: F[x], O2 >: O, R2 >: R](
-      using F: Monad[F2]
+      using F: MonadThrow[F2]
     ): F2[Either[R2, (O2, Pull[F2, O2, R2])]] =
       this match
         case Result(r) => F.unit(Left(r))
@@ -25,6 +30,16 @@ object EffectfulPulls:
         case Eval(action) => action.map(Left(_))
         case Uncons(source) =>
           source.step.map(s => Left(s.asInstanceOf[R2]))
+        case Handle(source, f) =>
+          source match
+            case Handle(s2, g) =>
+              s2.handleErrorWith(x => g(x).handleErrorWith(y => f(y))).step
+            case other =>
+              other.step.map:
+                case Right((hd, tl)) => Right((hd, Handle(tl, f)))
+                case Left(r) => Left(r)
+              .handleErrorWith(t => f(t).step)
+        case Error(t) => F.raiseError(t)
         case FlatMap(source, f) =>
           source match
             case FlatMap(s2, g) =>
@@ -34,13 +49,13 @@ object EffectfulPulls:
               case Right((hd, tl)) => F.unit(Right((hd, tl.flatMap(f))))
 
     def fold[F2[x] >: F[x], R2 >: R, A](init: A)(f: (A, O) => A)(
-      using F: Monad[F2]
+      using F: MonadThrow[F2]
     ): F2[(R2, A)] =
       step.flatMap:
         case Left(r) => F.unit((r, init))
         case Right((hd, tl)) => tl.fold(f(init, hd))(f)
 
-    def toList[F2[x] >: F[x]: Monad, O2 >: O]: F2[List[O2]] =
+    def toList[F2[x] >: F[x]: MonadThrow, O2 >: O]: F2[List[O2]] =
       fold(List.newBuilder[O])((bldr, o) => bldr += o).map(_(1).result())
 
     def flatMap[F2[x] >: F[x], O2 >: O, R2](f: R => Pull[F2, O2, R2]): Pull[F2, O2, R2] =
@@ -114,6 +129,9 @@ object EffectfulPulls:
           val (s, out) = f(init, hd)
           Output(out) >> tl.mapAccumulate(s)(f)
 
+    def handleErrorWith[F2[x] >: F[x], O2 >: O, R2 >: R](handler: Throwable => Pull[F2, O2, R2]): Pull[F2, O2, R2] =
+      Pull.Handle(this, handler)
+
   object Pull:
 
     val done: Pull[Nothing, Nothing, Unit] = Result(())
@@ -123,9 +141,10 @@ object EffectfulPulls:
         case Left(r) => Result(r)
         case Right((o, r2)) => Output(o) >> unfold(r2)(f)
 
-    // Exercise 15.11
     def unfoldEval[F[_], O, R](init: R)(f: R => F[Either[R, (O, R)]]): Pull[F, O, R] =
-      ???
+      Pull.Eval(f(init)).flatMap:
+        case Left(r) => Result(r)
+        case Right((o, r2)) => Output(o) >> unfoldEval(r2)(f)
 
     extension [F[_], R](self: Pull[F, Int, R])
       def slidingMean(n: Int): Pull[F, Double, R] =
@@ -182,24 +201,29 @@ object EffectfulPulls:
     def iterate[O](initial: O)(f: O => O): Stream[Nothing1, O] =
       Pull.Output(initial) >> iterate(f(initial))(f)
 
-    // Exercise 15.9
     def eval[F[_], O](fo: F[O]): Stream[F, O] =
-      ???
+      Pull.Eval(fo).flatMap(Pull.Output(_))
 
-    // Exercise 15.11
     def unfoldEval[F[_], O, R](init: R)(f: R => F[Option[(O, R)]]): Stream[F, O] =
-      ???
+      Pull.Eval(f(init)).flatMap:
+        case None => Stream.empty
+        case Some((o, r)) => Pull.Output(o) ++ unfoldEval(r)(f)
+
+    def fromIterator[O](itr: Iterator[O]): Stream[Nothing1, O] =
+      if itr.hasNext then Pull.Output(itr.next()) >> fromIterator(itr) else Pull.done
+
+    def raiseError[F[_], O](t: Throwable): Stream[F, O] = Pull.Error(t)
 
     extension [F[_], O](self: Stream[F, O])
       def toPull: Pull[F, O, Unit] = self
 
-      def fold[A](init: A)(f: (A, O) => A)(using Monad[F]): F[A] =
+      def fold[A](init: A)(f: (A, O) => A)(using MonadThrow[F]): F[A] =
         self.fold(init)(f).map(_(1))
 
-      def toList(using Monad[F]): F[List[O]] =
+      def toList(using MonadThrow[F]): F[List[O]] =
         self.toList
 
-      def run(using Monad[F]): F[Unit] =
+      def run(using MonadThrow[F]): F[Unit] =
         fold(())((_, _) => ()).map(_(1))
 
       def ++(that: => Stream[F, O]): Stream[F, O] =
@@ -214,22 +238,24 @@ object EffectfulPulls:
       def filter(p: O => Boolean): Stream[F, O] =
         self.filter(p)
 
-      def map[O2](f: O => O2): Stream[F, O2] =
-        self.mapOutput(f)
-
-      def flatMap[O2](f: O => Stream[F, O2]): Stream[F, O2] =
-        self.flatMapOutput(f)
-
-      // Exercise 15.10
       def mapEval[O2](f: O => F[O2]): Stream[F, O2] =
-        ???
+        self.flatMapOutput(o => Stream.eval(f(o)))
+
+      def handleErrorWith(handler: Throwable => Stream[F, O]): Stream[F, O] =
+        Pull.Handle(self, handler)
+
+      def onComplete(that: => Stream[F, O]): Stream[F, O] =
+        handleErrorWith(t => that ++ raiseError(t)) ++ that
+
+      def drain: Stream[F, Nothing] =
+        self.flatMapOutput(o => Stream.empty)
 
     extension [O](self: Stream[Nothing, O])
       def fold[A](init: A)(f: (A, O) => A): A =
-        self.fold(init)(f)(using Monad.tailrecMonad).result(1)
+        (self: Stream[SyncTask, O]).fold(init)(f).resultOrThrow(1)
 
       def toList: List[O] =
-        self.toList(using Monad.tailrecMonad).result
+        (self: Stream[SyncTask, O]).toList.resultOrThrow
 
     given [F[_]] => Monad[[x] =>> Stream[F, x]]:
       def unit[A](a: => A): Stream[F, A] = Pull.Output(a)
@@ -239,4 +265,24 @@ object EffectfulPulls:
 
   type Pipe[F[_], -I, +O] = Stream[F, I] => Stream[F, O]
 
-end EffectfulPulls
+end ErrorHandling
+
+object ErrorHandlingExample:
+  import fpinscala.answers.iomonad.Task
+  import scala.io.Source
+  import ErrorHandling.Stream
+
+  def acquire(path: String): Task[Source] =
+    Task(Source.fromFile(path))
+
+  def use(source: Source): Stream[Task, Unit] =
+    Stream.eval(Task(source.getLines()))
+      .flatMap(itr => Stream.fromIterator(itr))
+      .mapEval(line => Task(println(line)))
+
+  def release(source: Source): Task[Unit] =
+    Task(source.close())
+
+  val prg: Stream[Task, Unit] =
+    Stream.eval(acquire("build.sbt")).flatMap(resource =>
+      use(resource).onComplete(Stream.eval(release(resource))))

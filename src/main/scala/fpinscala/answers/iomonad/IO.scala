@@ -1,4 +1,4 @@
-package fpinscala.exercises.iomonad
+package fpinscala.answers.iomonad
 
 import fpinscala.answers.parallelism.Nonblocking.Par
 import java.util.concurrent.{Executors, ExecutorService}
@@ -17,7 +17,7 @@ object IO:
   def apply[A](a: => A): IO[A] =
     par(Par.delay(a))
 
-  // Provides the syntax `IO.async(cb => ...)` for creating asynchronous IO blocks.
+  // Provides the syntax `IO.async { cb => ... }` for creating asynchronous IO blocks.
   def async[A](cb: (A => Unit) => Unit): IO[A] =
     fork(par(Par.async(cb)))
 
