@@ -1,18 +1,9 @@
-val commonSettings = Seq(
-  scalaVersion := "3.8.3",
-  scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint")
-)
+name := "fpinscala"
 
-lazy val root = (project in file("."))
-  .aggregate(exercises)
-  .settings(commonSettings)
-  .settings(
-    name := "fp-in-scala",
-    version := "0.1.0"
-  )
+ThisBuild / scalaVersion := "3.8.3"
 
-lazy val exercises = (project in file("exercises"))
-  .settings(commonSettings)
-  .settings(
-    name := "exercises"
-  )
+ThisBuild / githubWorkflowBuild := Seq(WorkflowStep.Sbt(name = Some("Build project"), commands = List("test:compile")))
+
+ThisBuild / scalacOptions ++= List("-feature", "-deprecation", "-Xkind-projector:underscores", "-source:future")
+
+ThisBuild / libraryDependencies += "org.scalameta" %% "munit" % "1.2.4" % Test
