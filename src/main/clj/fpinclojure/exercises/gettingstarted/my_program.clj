@@ -68,7 +68,7 @@
 
 ;; This definition and `format-abs` are very similar..
 
-(defn- format-factorial [n]
+(defn format-factorial [n]
   (let [msg "The factorial of %d is %d."]
     (format msg n (factorial n))))
 
