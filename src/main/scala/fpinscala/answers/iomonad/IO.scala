@@ -25,7 +25,6 @@ object IO:
 
   def forkUnit[A](a: => A): IO[A] = fork(now(a))
 
-
   extension [A](ioa: IO[A])
     def unsafeRunSync(pool: ExecutorService): A =
       ioa.run.run(pool)

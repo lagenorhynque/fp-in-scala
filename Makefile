@@ -1,3 +1,11 @@
+.PHONY: lint
+lint: lint-clj lint-scala
+
+# Clojure
+
+.PHONY: lint-clj
+lint-clj: cljstyle-check clj-kondo-lint joker-lint
+
 .PHONY: cljstyle-check
 cljstyle-check:
 	@cljstyle check
@@ -14,6 +22,19 @@ clj-kondo-lint:
 joker-lint:
 	@joker --lint --working-dir .
 
-.PHONY: lint-clj
-lint-clj:
-	@make cljstyle-check clj-kondo-lint joker-lint
+# Scala
+
+.PHONY: lint-scala
+lint-scala: scalafmt-check scalafix-lint
+
+.PHONY: scalafmt-check
+scalafmt-check:
+	@scalafmt --check src
+
+.PHONY: scalafmt-fix
+scalafmt-fix:
+	@scalafmt src
+
+.PHONY: scalafix-lint
+scalafix-lint:
+	@scalafix --check src

@@ -34,7 +34,7 @@ trait Traverse[F[_]] extends Functor[F], Foldable[F]:
         for
           s1 <- State.get[S]
           (b, s2) = f(a, s1)
-          _  <- State.set(s2)
+          _ <- State.set(s2)
         yield b
       ).run(s)
 
@@ -44,7 +44,10 @@ trait Traverse[F[_]] extends Functor[F], Foldable[F]:
     def reverse: F[A] =
       ???
 
-    def fuse[M[_], N[_], B](f: A => M[B], g: A => N[B])(using m: Applicative[M], n: Applicative[N]): (M[F[B]], N[F[B]]) =
+    def fuse[M[_], N[_], B](f: A => M[B], g: A => N[B])(using
+        m: Applicative[M],
+        n: Applicative[N]
+    ): (M[F[B]], N[F[B]]) =
       ???
 
   def compose[G[_]: Traverse]: Traverse[[x] =>> F[G[x]]] = new:

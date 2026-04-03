@@ -11,13 +11,16 @@ def bindTest() =
 
   val N = 100000
   def go[F[_]](unit: F[Unit])(f: F[Int] => Int)(using F: Monad[F]): Unit =
-    f((0 to N).map(i => unit.map(_ => i)).foldLeft(F.unit(0)): (f1, f2) =>
-      for
-        acc <- f1
-        i <- f2
-      yield
-        // if (i == N) println("result: " + (acc+i))
-        (acc + i)
+    f(
+      (0 to N)
+        .map(i => unit.map(_ => i))
+        .foldLeft(F.unit(0)): (f1, f2) =>
+          for
+            acc <- f1
+            i <- f2
+          yield
+            // if (i == N) println("result: " + (acc+i))
+            (acc + i)
     )
 
   import fpinscala.answers.parallelism.Nonblocking.*
@@ -33,7 +36,9 @@ def bindTest() =
   timeit(10)(go(Throw(()))(_.run))
   timeit(10)(go(IO2b.TailRec(()))(_.run))
   timeit(10)(go(IO2c.Async(()))(_.run.run(pool)))
-  timeit(10)(go(summon[Monad[[x] =>> IO3.Free[Par, x]]].unit(()))(_.run.run(pool)))
+  timeit(10)(
+    go(summon[Monad[[x] =>> IO3.Free[Par, x]]].unit(()))(_.run.run(pool))
+  )
   timeit(10)(go(Task.now(()))(_.unsafeRunSync(pool)))
   timeit(10)(go(Task.forkUnit(()))(_.unsafeRunSync(pool)))
   timeit(10)(go(parMonad.unit(()))(_.run(pool)))

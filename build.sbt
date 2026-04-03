@@ -2,8 +2,18 @@ name := "fpinscala"
 
 ThisBuild / scalaVersion := "3.8.3"
 
-ThisBuild / githubWorkflowBuild := Seq(WorkflowStep.Sbt(name = Some("Build project"), commands = List("test:compile")))
+ThisBuild / githubWorkflowBuild := Seq(
+  WorkflowStep.Sbt(
+    name = Some("Build project"),
+    commands = List("test:compile")
+  )
+)
 
-ThisBuild / scalacOptions ++= List("-feature", "-deprecation", "-Xkind-projector:underscores", "-source:future")
+ThisBuild / scalacOptions ++= List(
+  "-feature",
+  "-deprecation",
+  "-Xkind-projector:underscores",
+  "-source:future"
+)
 
 ThisBuild / libraryDependencies += "org.scalameta" %% "munit" % "1.2.4" % Test

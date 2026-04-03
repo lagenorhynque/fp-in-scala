@@ -4,20 +4,25 @@ package fpinscala.exercises.datastructures
 enum List[+A]:
   /** A `List` data constructor representing the empty list. */
   case Nil
-  /** Another data constructor, representing nonempty lists. Note that `tail` is another `List[A]`,
-    which may be `Nil` or another `Cons`.
-   */
+
+  /** Another data constructor, representing nonempty lists. Note that `tail` is
+    * another `List[A]`, which may be `Nil` or another `Cons`.
+    */
   case Cons(head: A, tail: List[A])
 
 object List: // `List` companion object. Contains functions for creating and working with lists.
-  def sum(ints: List[Int]): Int = ints match // A function that uses pattern matching to add up a list of integers
-    case Nil => 0 // The sum of the empty list is 0.
-    case Cons(x,xs) => x + sum(xs) // The sum of a list starting with `x` is `x` plus the sum of the rest of the list.
+  def sum(ints: List[Int]): Int =
+    ints match // A function that uses pattern matching to add up a list of integers
+      case Nil         => 0 // The sum of the empty list is 0.
+      case Cons(x, xs) =>
+        x + sum(
+          xs
+        ) // The sum of a list starting with `x` is `x` plus the sum of the rest of the list.
 
   def product(doubles: List[Double]): Double = doubles match
-    case Nil => 1.0
+    case Nil          => 1.0
     case Cons(0.0, _) => 0.0
-    case Cons(x,xs) => x * product(xs)
+    case Cons(x, xs)  => x * product(xs)
 
   def apply[A](as: A*): List[A] = // Variadic function syntax
     if as.isEmpty then Nil
@@ -25,29 +30,37 @@ object List: // `List` companion object. Contains functions for creating and wor
 
   // Exercise 3.1
   @annotation.nowarn // Scala gives a hint here via a warning, so let's disable that
-  val result = List(1,2,3,4,5) match
-    case Cons(x, Cons(2, Cons(4, _))) => x
-    case Nil => 42
+  val result = List(1, 2, 3, 4, 5) match
+    case Cons(x, Cons(2, Cons(4, _)))          => x
+    case Nil                                   => 42
     case Cons(x, Cons(y, Cons(3, Cons(4, _)))) => x + y
-    case Cons(h, t) => h + sum(t)
-    case _ => 101
+    case Cons(h, t)                            => h + sum(t)
+    case _                                     => 101
   // => 3
 
   def append[A](a1: List[A], a2: List[A]): List[A] =
     a1 match
-      case Nil => a2
-      case Cons(h,t) => Cons(h, append(t, a2))
+      case Nil        => a2
+      case Cons(h, t) => Cons(h, append(t, a2))
 
-  def foldRight[A,B](as: List[A], acc: B, f: (A, B) => B): B = // Utility functions
+  def foldRight[A, B](
+      as: List[A],
+      acc: B,
+      f: (A, B) => B
+  ): B = // Utility functions
     as match
-      case Nil => acc
+      case Nil         => acc
       case Cons(x, xs) => f(x, foldRight(xs, acc, f))
 
   def sumViaFoldRight(ns: List[Int]): Int =
-    foldRight(ns, 0, (x,y) => x + y)
+    foldRight(ns, 0, (x, y) => x + y)
 
   def productViaFoldRight(ns: List[Double]): Double =
-    foldRight(ns, 1.0, _ * _) // `_ * _` is more concise notation for `(x,y) => x * y`; see sidebar
+    foldRight(
+      ns,
+      1.0,
+      _ * _
+    ) // `_ * _` is more concise notation for `(x,y) => x * y`; see sidebar
 
   // Exercise 3.2
   def tail[A](l: List[A]): List[A] =
@@ -107,7 +120,7 @@ object List: // `List` companion object. Contains functions for creating and wor
 
   // Exercise 3.10
   @annotation.tailrec
-  def foldLeft[A,B](l: List[A], acc: B, f: (B, A) => B): B =
+  def foldLeft[A, B](l: List[A], acc: B, f: (B, A) => B): B =
     l match
       case Nil         => acc
       case Cons(x, xs) => foldLeft(xs, f(acc, x), f)
@@ -152,7 +165,7 @@ object List: // `List` companion object. Contains functions for creating and wor
     foldRight(l, Nil: List[String], (n, acc) => Cons(n.toString, acc))
 
   // Exercise 3.18
-  def map[A,B](l: List[A], f: A => B): List[B] =
+  def map[A, B](l: List[A], f: A => B): List[B] =
     foldRight(l, Nil: List[B], (x, acc) => Cons(f(x), acc))
 
   // Exercise 3.19
@@ -160,7 +173,7 @@ object List: // `List` companion object. Contains functions for creating and wor
     foldRight(as, Nil: List[A], (x, acc) => if f(x) then Cons(x, acc) else acc)
 
   // Exercise 3.20
-  def flatMap[A,B](as: List[A], f: A => List[B]): List[B] =
+  def flatMap[A, B](as: List[A], f: A => List[B]): List[B] =
     concat(map(as, f))
 
   // Exercise 3.21

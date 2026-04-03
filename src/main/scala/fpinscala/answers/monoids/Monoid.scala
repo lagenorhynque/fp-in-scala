@@ -54,11 +54,12 @@ object Monoid:
     def combine(x: Option[A], y: Option[A]) = x.map2(y)(f)
     val empty = None
 
-  extension [A](optA: Option[A]) def map2[B, C](optB: Option[B])(f: (A, B) => C): Option[C] =
-    for
-      a <- optA
-      b <- optB
-    yield f(a, b)
+  extension [A](optA: Option[A])
+    def map2[B, C](optB: Option[B])(f: (A, B) => C): Option[C] =
+      for
+        a <- optA
+        b <- optB
+      yield f(a, b)
 
   // There is a choice of implementation here as well.
   // Do we implement it as `f compose g` or `f andThen g`? We have to pick one.
@@ -102,10 +103,8 @@ object Monoid:
     foldMap(as, endoMonoid)(a => b => f(b, a))(acc)
 
   def foldMapV[A, B](as: IndexedSeq[A], m: Monoid[B])(f: A => B): B =
-    if as.length == 0 then
-      m.empty
-    else if as.length == 1 then
-      f(as(0))
+    if as.length == 0 then m.empty
+    else if as.length == 1 then f(as(0))
     else
       val (l, r) = as.splitAt(as.length / 2)
       m.combine(foldMapV(l, m)(f), foldMapV(r, m)(f))
@@ -120,24 +119,32 @@ object Monoid:
     def combine(a: Par[A], b: Par[A]) = a.map2(b)(m.combine)
 
   // we perform the mapping and the reducing both in parallel
-  def parFoldMap[A,B](as: IndexedSeq[A], m: Monoid[B])(f: A => B): Par[B] =
-    Par.parMap(as)(f).flatMap: bs =>
-      foldMapV(bs, par(m))(b => Par.lazyUnit(b))
+  def parFoldMap[A, B](as: IndexedSeq[A], m: Monoid[B])(f: A => B): Par[B] =
+    Par
+      .parMap(as)(f)
+      .flatMap: bs =>
+        foldMapV(bs, par(m))(b => Par.lazyUnit(b))
 
   case class Interval(ordered: Boolean, min: Int, max: Int)
   val orderedMonoid: Monoid[Option[Interval]] = new:
     def combine(oa1: Option[Interval], oa2: Option[Interval]) =
       (oa1, oa2) match
         case (Some(a1), Some(a2)) =>
-          Some(Interval(a1.ordered && a2.ordered && a1.max <= a2.min,
-            a1.min, a2.max))
+          Some(
+            Interval(
+              a1.ordered && a2.ordered && a1.max <= a2.min,
+              a1.min,
+              a2.max
+            )
+          )
         case (x, None) => x
         case (None, x) => x
     val empty = None
 
   def ordered(ints: IndexedSeq[Int]): Boolean =
     foldMapV(ints, orderedMonoid)(i => Some(Interval(true, i, i)))
-      .map(_.ordered).getOrElse(true)
+      .map(_.ordered)
+      .getOrElse(true)
 
   enum WC:
     case Stub(chars: String)
@@ -147,9 +154,9 @@ object Monoid:
     val empty = WC.Stub("")
 
     def combine(wc1: WC, wc2: WC) = (wc1, wc2) match
-      case (WC.Stub(a), WC.Stub(b)) => WC.Stub(a + b)
-      case (WC.Stub(a), WC.Part(l, w, r)) => WC.Part(a + l, w, r)
-      case (WC.Part(l, w, r), WC.Stub(a)) => WC.Part(l, w, r + a)
+      case (WC.Stub(a), WC.Stub(b))                => WC.Stub(a + b)
+      case (WC.Stub(a), WC.Part(l, w, r))          => WC.Part(a + l, w, r)
+      case (WC.Part(l, w, r), WC.Stub(a))          => WC.Part(l, w, r + a)
       case (WC.Part(l, w, r), WC.Part(l2, w2, r2)) =>
         WC.Part(l, w + (if (r + l2).isEmpty then 0 else 1) + w2, r2)
 
@@ -169,13 +176,11 @@ object Monoid:
     // A single character's count. Whitespace does not count,
     // and non-whitespace starts a new Stub.
     def wc(c: Char): WC =
-      if c.isWhitespace then
-        WC.Part("", 0, "")
-      else
-        WC.Stub(c.toString)
+      if c.isWhitespace then WC.Part("", 0, "")
+      else WC.Stub(c.toString)
     def unstub(s: String) = if s.isEmpty then 0 else 1
     foldMapV(s.toIndexedSeq, wcMonoid)(wc) match
-      case WC.Stub(s) => unstub(s)
+      case WC.Stub(s)       => unstub(s)
       case WC.Part(l, w, r) => unstub(l) + w + unstub(r)
 
   // Variant of foldMap which takes Monoid[B] as a context param
@@ -192,16 +197,19 @@ object Monoid:
 
   val charCount = foldMapG(List("abra", "ca", "dabra"))(_.length)
 
-  given productMonoid: [A, B] => (ma: Monoid[A], mb: Monoid[B]) => Monoid[(A, B)]:
+  given productMonoid
+      : [A, B] => (ma: Monoid[A], mb: Monoid[B]) => Monoid[(A, B)]:
     def combine(x: (A, B), y: (A, B)) =
       (ma.combine(x(0), y(0)), mb.combine(x(1), y(1)))
     val empty = (ma.empty, mb.empty)
 
   given mapMergeMonoid: [K, V] => (mv: Monoid[V]) => Monoid[Map[K, V]]:
     def combine(a: Map[K, V], b: Map[K, V]) =
-      (a.keySet ++ b.keySet).foldLeft(empty): (acc,k) =>
-        acc.updated(k, mv.combine(a.getOrElse(k, mv.empty),
-                                  b.getOrElse(k, mv.empty)))
+      (a.keySet ++ b.keySet).foldLeft(empty): (acc, k) =>
+        acc.updated(
+          k,
+          mv.combine(a.getOrElse(k, mv.empty), b.getOrElse(k, mv.empty))
+        )
     val empty = Map()
 
   given functionMonoid: [A, B] => (mb: Monoid[B]) => Monoid[A => B]:
