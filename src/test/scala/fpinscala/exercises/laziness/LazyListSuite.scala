@@ -31,7 +31,7 @@ class LazyListSuite extends PropSuite:
 
   test("LazyList.cons")(
     genLazyList.map(tail =>
-      (LazyList.cons(Random.nextInt, tail), Cons(Random.nextInt, () => tail))
+      (LazyList.cons(Random.nextInt(), tail), Cons(Random.nextInt, () => tail))
     )
   ): (smartConstructor, oldConstructor) =>
     assertEquals(smartConstructor.headOption, smartConstructor.headOption)
