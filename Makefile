@@ -1,5 +1,5 @@
 .PHONY: lint
-lint: lint-clj lint-scala
+lint: lint-clj lint-scala lint-flix
 
 # Clojure
 
@@ -38,3 +38,12 @@ scalafmt-fix:
 .PHONY: scalafix-lint
 scalafix-lint:
 	@scalafix --check src
+
+# Flix
+
+.PHONY: lint-flix
+lint-flix: check-flix
+
+.PHONY: flix-check
+check-flix:
+	@flix check
