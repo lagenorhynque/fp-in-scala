@@ -1,4 +1,4 @@
-(ns fpinclojure.core-test
+(ns fp-in-clojure.core-test
   (:require
    [clojure.test :as t]))
 

@@ -16,7 +16,7 @@ cljstyle-fix:
 
 .PHONY: clj-kondo-lint
 clj-kondo-lint:
-	@clj-kondo --lint src
+	@clj-kondo --lint src test
 
 .PHONY: joker-lint
 joker-lint:

@@ -1,4 +1,4 @@
-(ns fpinclojure.exercises.gettingstarted.monomorphic-binary-search
+(ns fp-in-clojure.exercises.getting-started.monomorphic-binary-search
   (:require
    [clojure.spec.alpha :as s]))
 

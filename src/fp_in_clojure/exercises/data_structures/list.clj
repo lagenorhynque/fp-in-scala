@@ -1,4 +1,4 @@
-(ns fpinclojure.exercises.datastructures.list
+(ns fp-in-clojure.exercises.data-structures.list
   (:refer-clojure :exclude [concat drop drop-while filter list map reverse])
   (:require
    [clojure.core.match :refer [match]]

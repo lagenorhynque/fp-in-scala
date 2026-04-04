@@ -1,6 +1,6 @@
-(ns fpinclojure.exercises.gettingstarted.format-abs-and-factorial
+(ns fp-in-clojure.exercises.getting-started.format-abs-and-factorial
   (:require
-   [fpinclojure.exercises.gettingstarted.my-program :refer [abs factorial format-result]]))
+   [fp-in-clojure.exercises.getting-started.my-program :refer [abs factorial format-result]]))
 
 ;; Now we can use our general `format-result` function
 ;; with both `abs` and `factorial`

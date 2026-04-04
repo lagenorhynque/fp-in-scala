@@ -1,4 +1,4 @@
-(ns fpinclojure.exercises.gettingstarted.polymorphic-functions
+(ns fp-in-clojure.exercises.getting-started.polymorphic-functions
   (:require
    [clojure.spec.alpha :as s]))
 

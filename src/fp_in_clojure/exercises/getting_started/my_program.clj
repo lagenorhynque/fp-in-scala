@@ -1,6 +1,5 @@
 ;; A comment!
-;;; Another comment
-(ns fpinclojure.exercises.gettingstarted.my-program
+(ns fp-in-clojure.exercises.getting-started.my-program
   "A documentation comment"
   (:refer-clojure :exclude [abs])
   (:require

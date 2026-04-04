@@ -1,9 +1,9 @@
 ;; Functions get passed around so often in FP that it's
 ;; convenient to have syntax for constructing a function
 ;; *without* having to give it a name
-(ns fpinclojure.exercises.gettingstarted.anonymous-functions
+(ns fp-in-clojure.exercises.getting-started.anonymous-functions
   (:require
-   [fpinclojure.exercises.gettingstarted.my-program :refer [abs factorial format-result]]))
+   [fp-in-clojure.exercises.getting-started.my-program :refer [abs factorial format-result]]))
 
 ;; Some examples of anonymous functions:
 (defn -main [& _]

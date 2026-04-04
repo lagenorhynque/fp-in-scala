@@ -1,6 +1,6 @@
-(ns fpinclojure.exercises.gettingstarted.test-fib
+(ns fp-in-clojure.exercises.getting-started.test-fib
   (:require
-   [fpinclojure.exercises.gettingstarted.my-program :refer [fib]]))
+   [fp-in-clojure.exercises.getting-started.my-program :refer [fib]]))
 
 ;; test implementation of `fib`
 (defn -main [& _]

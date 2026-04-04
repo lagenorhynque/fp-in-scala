@@ -1,4 +1,4 @@
-(ns fpinclojure.exercises.datastructures.tree
+(ns fp-in-clojure.exercises.data-structures.tree
   (:refer-clojure :exclude [map])
   (:require
    [clojure.spec.alpha :as s]))
