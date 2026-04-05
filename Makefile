@@ -25,10 +25,6 @@ clj-kondo-lint:
 joker-lint:
 	@joker --lint --working-dir .
 
-.PHONY: prepare-clj
-prepare-clj:
-	@clojure -P
-
 .PHONY: test-clj
 test-clj:
 	@clojure -T:build test

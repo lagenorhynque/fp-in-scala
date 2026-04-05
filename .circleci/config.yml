@@ -9,16 +9,36 @@ jobs:
       TERM: dumb
     steps:
       - checkout
+      - run:
+          name: Install static code analysis tools
+          environment:
+            CLJSTYLE_VERSION: 0.17.642
+            CLJ_KONDO_VERSION: 2026.01.19
+            JOKER_VERSION: 1.7.1
+          command: |
+            # cljstyle
+            wget https://github.com/greglook/cljstyle/releases/download/${CLJSTYLE_VERSION}/cljstyle_${CLJSTYLE_VERSION}_linux_amd64.zip
+            unzip -qq cljstyle_${CLJSTYLE_VERSION}_linux_amd64.zip
+            sudo mv -f cljstyle /usr/local/bin/
+            # clj-kondo
+            curl -sLO https://raw.githubusercontent.com/clj-kondo/clj-kondo/master/script/install-clj-kondo
+            chmod +x install-clj-kondo
+            sudo ./install-clj-kondo --version ${CLJ_KONDO_VERSION}
+            # Joker
+            wget https://github.com/candid82/joker/releases/download/v${JOKER_VERSION}/joker-linux-amd64.zip
+            unzip -qq joker-linux-amd64.zip
+            sudo mv -f joker /usr/local/bin/
+      - run: make lint-clj
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "deps.edn" }}
             - v1-dependencies-
-      - run: make prepare-clj
+      - run: make test-and-build-clj
       - save_cache:
           paths:
             - ~/.m2
+            - ~/.gitlibs
           key: v1-dependencies--{{ checksum "deps.edn" }}
-      - run: make test-and-build-clj
 
   build-scala:
     docker:
