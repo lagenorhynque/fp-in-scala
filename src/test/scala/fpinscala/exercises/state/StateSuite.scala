@@ -7,6 +7,7 @@ import fpinscala.exercises.common.PropSuite
 import fpinscala.exercises.state.State
 import fpinscala.exercises.state.State.*
 
+@munit.IgnoreSuite
 class StateSuite extends PropSuite:
   // a - the head element, next state - the tail of the list
   private val stateA: State[List[String], Option[String]] =

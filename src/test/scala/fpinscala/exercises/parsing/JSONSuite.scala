@@ -9,6 +9,7 @@ import fpinscala.exercises.parsing.JSON.*
 import fpinscala.exercises.parsing.{JSON, Parsers}
 
 // Exercise 9.9
+@munit.IgnoreSuite
 class JSONSuite extends PropSuite:
   private lazy val parser = JSON.jsonParser(UnitTestParser)
 

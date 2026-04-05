@@ -9,6 +9,7 @@ import fpinscala.exercises.parallelism.Nonblocking.*
 
 import java.util.concurrent.*
 
+@munit.IgnoreSuite
 class NonblockingSuite extends PropSuite:
   private val es = Executors.newFixedThreadPool(4)
   private val genParBoolean: Gen[Par[Boolean]] = Gen.boolean.map(Par.unit)

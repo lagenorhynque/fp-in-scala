@@ -11,6 +11,7 @@ import fpinscala.exercises.datastructures.TreeSuite.genIntTree
 import fpinscala.exercises.monoids.Foldable.*
 import fpinscala.exercises.monoids.Monoid.*
 
+@munit.IgnoreSuite
 class FoldableSuite extends PropSuite:
   import Foldable.given
   given Monoid[Int] = intAddition

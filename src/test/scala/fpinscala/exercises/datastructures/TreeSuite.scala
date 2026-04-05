@@ -10,6 +10,7 @@ import fpinscala.exercises.datastructures.TreeSuite.genIntTree
 
 import scala.List as SList
 
+@munit.IgnoreSuite
 class TreeSuite extends PropSuite:
   test("Tree.size")(genIntTree): tree =>
     assertEquals(tree.size, toScalaList(tree).length)

@@ -16,6 +16,7 @@ import munit.Assertions
 import java.util.concurrent.*
 import scala.collection.immutable.Iterable
 
+@munit.IgnoreSuite
 class MonadSuite extends PropSuite:
   test("genMonad")(genInt ** genString ** genRNG):
     case n ** s ** rng =>

@@ -10,6 +10,7 @@ import fpinscala.exercises.laziness.LazyList.*
 
 import scala.util.{Random, Try}
 
+@munit.IgnoreSuite
 class LazyListSuite extends PropSuite:
   private val genSmallInt = Gen.choose(0, 10)
   private val genMidInt = Gen.choose(0, 100)

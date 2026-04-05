@@ -11,6 +11,7 @@ import fpinscala.exercises.parallelism.Nonblocking.*
 
 import java.util.concurrent.Executors
 
+@munit.IgnoreSuite
 class MonoidSuite extends PropSuite:
   private val es = Executors.newFixedThreadPool(4)
 

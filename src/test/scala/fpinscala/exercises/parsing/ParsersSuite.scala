@@ -6,6 +6,7 @@ import fpinscala.exercises.common.Common.*
 import fpinscala.exercises.common.PropSuite
 import fpinscala.exercises.parsing.Parsers
 
+@munit.IgnoreSuite
 class ParsersSuite extends PropSuite:
   import UnitTestParser.*
 

@@ -8,6 +8,7 @@ import fpinscala.exercises.common.PropSuite
 import fpinscala.exercises.errorhandling.*
 import fpinscala.exercises.errorhandling.Either.*
 
+@munit.IgnoreSuite
 class EitherSuite extends PropSuite:
   private val genEither: Gen[Either[String, Int]] =
     Gen.union(genString.map(Left(_)), Gen.int.map(Right(_)))

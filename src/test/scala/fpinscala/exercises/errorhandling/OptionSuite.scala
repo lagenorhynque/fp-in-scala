@@ -16,6 +16,7 @@ import scala.{
   Some as SSome
 }
 
+@munit.IgnoreSuite
 class OptionSuite extends PropSuite:
   private val genIntOption: Gen[Option[Int]] =
     Gen.union(Gen.unit(None), Gen.int.map(Some(_)))

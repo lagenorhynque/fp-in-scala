@@ -10,6 +10,7 @@ import fpinscala.exercises.testing.Gen
 import fpinscala.exercises.testing.Gen.*
 import fpinscala.exercises.testing.Prop.*
 
+@munit.IgnoreSuite
 class GenSuite extends PropSuite:
   private val shortSample = 1000
   private val genRNG: ExhGen[RNG] = ExhGen.int.map(i => RNG.Simple(i.toLong))

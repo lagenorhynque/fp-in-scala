@@ -65,16 +65,16 @@ object List: // `List` companion object. Contains functions for creating and wor
   // Exercise 3.2
   def tail[A](l: List[A]): List[A] =
     l match
-      case Nil         => Nil
+      case Nil         => sys.error("tail of empty list")
       case Cons(_, xs) => xs
   // 入力が Nil の場合の実装上のその他の選択肢:
-  // - エラー終了する(例外をスローする)
+  // - Nilを返す
   // - 戻り値をOptionで包み、Noneを返す
 
   // Exercise 3.3
   def setHead[A](l: List[A], h: A): List[A] =
     l match
-      case Nil         => Cons(h, Nil)
+      case Nil         => sys.error("setHead on empty list")
       case Cons(_, xs) => Cons(h, xs)
 
   // Exercise 3.4
@@ -97,7 +97,7 @@ object List: // `List` companion object. Contains functions for creating and wor
   // Exercise 3.6
   def init[A](l: List[A]): List[A] =
     l match
-      case Nil          => Nil
+      case Nil          => sys.error("init of empty list")
       case Cons(_, Nil) => Nil
       case Cons(x, xs)  => Cons(x, init(xs))
   // このリストの実装は単方向連結リストであり、最終要素を除外したリストを得るにはリスト全体を走査し再構築する必要がある。

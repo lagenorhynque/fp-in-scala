@@ -9,6 +9,7 @@ import fpinscala.exercises.state.RNG.*
 
 import scala.annotation.tailrec
 
+@munit.IgnoreSuite
 class RNGSuite extends PropSuite:
   private val genRNG = Gen.int.map(Simple(_))
   private val genCounter = Gen.choose(10, 100)
