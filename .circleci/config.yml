@@ -48,6 +48,25 @@ jobs:
       TERM: dumb
     steps:
       - checkout
+      - run:
+          name: Install Coursier
+          command: |
+            # Coursier
+            curl -fL "https://github.com/coursier/launchers/raw/master/cs-x86_64-pc-linux.gz" | gzip -d > cs
+            chmod +x cs
+            ./cs setup --yes
+            echo 'export PATH="$HOME/.local/share/coursier/bin:$PATH"' >> "$BASH_ENV"
+      - run:
+          name: Install static code analysis tools
+          environment:
+            SCALAFMT_VERSION: 3.10.7
+            SCALAFIX_VERSION: 0.14.6
+          command: |
+            # Scalafmt
+            cs install scalafmt:${SCALAFMT_VERSION}
+            # Scalafix
+            cs install scalafix:${SCALAFIX_VERSION}
+      - run: make lint-scala
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "build.sbt" }}
@@ -67,10 +86,6 @@ jobs:
       TERM: dumb
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "flix.toml" }}
-            - v1-dependencies-
       - run:
           name: Install Flix
           environment:
@@ -80,6 +95,11 @@ jobs:
             echo 'exec java -jar ${CIRCLE_WORKING_DIRECTORY}/flix.jar' > flix
             chmod +x flix
             sudo mv -f flix /usr/local/bin/
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "flix.toml" }}
+            - v1-dependencies-
+      - run: make lint-flix
       - run: make compile-flix
       - save_cache:
           paths:
