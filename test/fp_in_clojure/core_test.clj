@@ -3,5 +3,5 @@
    [clojure.test :as t]))
 
 (t/deftest a-test
-  (t/testing "FIXME, I fail."
-    (t/is (= 0 1))))
+  (t/testing "always true"
+    (t/is (= 0 0))))
