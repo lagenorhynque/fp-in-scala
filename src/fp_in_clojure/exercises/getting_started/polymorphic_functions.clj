@@ -1,6 +1,13 @@
 (ns fp-in-clojure.exercises.getting-started.polymorphic-functions
+  (:refer-clojure :exclude [sorted?])
   (:require
    [clojure.spec.alpha :as s]))
+
+;; Here's a polymorphic version of `find-first`, parameterized on
+;; a function for testing whether an `any?` is the element we want to find.
+;; Instead of hard-coding `string?`, we take a type `any?` as a parameter.
+;; And instead of hard-coding an equality check for a given key,
+;; we take a function with which to test each element of the sequence.
 
 (s/fdef find-first
   :args (s/cat :as (s/coll-of any?)
@@ -11,23 +18,28 @@
   (loop [n 0]
     (cond
       (>= n (count as)) -1
+      ;; If the function `p` matches the current element,
+      ;; we've found a match and we return its index in the sequence.
       (p (nth as n)) n
       :else (recur (inc n)))))
 
 ;; Exercise 2.2: Implement a polymorphic function to check whether
 ;; a sequnece is sorted
 
-(s/fdef is-sorted
+(s/fdef sorted?
   :args (s/cat :as (s/coll-of any?)
-               :ordered ifn?)
+               :gt ifn?)
   :ret boolean?)
 
-(defn is-sorted [as ordered]
+(defn sorted? [as gt]
   (loop [n 0]
     (cond
       (>= n (dec (count as))) true
-      (not (ordered (nth as n) (nth as (inc n)))) false
+      (gt (nth as n) (nth as (inc n))) false
       :else (recur (inc n)))))
+
+;; Polymorphic functions are often so constrained by their type
+;; that they only have one implementation! Here's an example:
 
 (s/fdef partial1
   :args (s/cat :a any?
@@ -79,11 +91,11 @@
 
   (find-first [] #(== % 2))
 
-  (is-sorted [2 5 1 4 3] <=)
+  (sorted? [2 5 1 4 3] >)
 
-  (is-sorted [1 2 3 4 5] <=)
+  (sorted? [1 2 3 4 5] >)
 
-  (is-sorted [1 1 3 4 5] <=)
+  (sorted? [1 1 3 4 5] >)
 
   ((partial1 1 #(+ %1 %2)) 2)
 
