@@ -1,7 +1,4 @@
-{:ignored-file-regexes []
- :ignored-unused-namespaces []
- :known-macros [clojure.core.match/match
+{:known-macros [clojure.core.match/match
                 clojure.spec.alpha/fdef
                 clojure.test.check.clojure-test/defspec
-                clojure.test.check.properties/for-all]
- :known-tags []}
+                clojure.test.check.properties/for-all]}

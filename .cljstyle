@@ -1,5 +1,4 @@
-{:files {:ignore #{}}
- :rules {:blank-lines {:max-consecutive 1
+{:rules {:blank-lines {:max-consecutive 1
                        :padding-lines 1}
          :functions {:enabled? false}
          :indentation {:indents {defspec [[:inner 0]]
