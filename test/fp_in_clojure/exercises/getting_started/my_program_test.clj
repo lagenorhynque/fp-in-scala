@@ -9,7 +9,7 @@
    [fp-in-clojure.test-helper :as test-helper]))
 
 (t/use-fixtures
-  :once test-helper/instrument-specs)
+  :once (test-helper/instrument-specs *ns*))
 
 (tc/defspec factorial-test 1000
   (prop/for-all [n (s/gen (s/and pos-int?
