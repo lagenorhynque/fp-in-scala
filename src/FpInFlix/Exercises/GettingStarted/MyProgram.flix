@@ -19,7 +19,7 @@ pub mod FpInFlix.Exercises.GettingStarted.MyProgram {
             else go(x - 1, x * acc);
         go(n, 1)
 
-    // Another implementation of `factorial`, this time with a `while` loop
+    // Another implementation of `factorial`, this time with a `foreach` loop
     pub def factorial2(n: Int32): Int32 =
         region rc {
             let acc = Ref.fresh(rc, 1);
