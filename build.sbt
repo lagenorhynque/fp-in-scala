@@ -16,4 +16,4 @@ ThisBuild / scalacOptions ++= List(
   "-source:future"
 )
 
-ThisBuild / libraryDependencies += "org.scalameta" %% "munit" % "1.2.4" % Test
+ThisBuild / libraryDependencies += "org.scalameta" %% "munit" % "1.3.0" % Test
