@@ -48,6 +48,8 @@ project/plugins/project/
 .bsp/
 
 .metals/
+project/metals.sbt
+project/project
 .bloop/
 .scala-build/
 
