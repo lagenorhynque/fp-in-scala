@@ -67,6 +67,11 @@
 (defn uncurry [f]
   (fn [a b] ((f a) b)))
 
+;; Note that we can go back and forth between the two forms. We can curry
+;; and uncurry and the two forms are in some sense "the same". In FP jargon,
+;; we say that they are _isomorphic_ ("iso" = same; "morphe" = shape, form),
+;; a term we inherit from category theory.
+
 ;; Exercise 2.5: Implement `compose`
 
 (s/fdef compose

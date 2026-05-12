@@ -57,13 +57,13 @@
 
 (defn fib [n]
   (loop [n n
-         prev 0
-         curr 1]
+         current 0
+         next 1]
     (if (<= n 0)
-      prev
+      current
       (recur (dec n)
-             curr
-             (+' prev curr)))))
+             next
+             (+' current next)))))
 
 ;; This definition and `format-abs` are very similar..
 
