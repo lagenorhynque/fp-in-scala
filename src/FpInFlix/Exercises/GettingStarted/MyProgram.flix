@@ -1,5 +1,6 @@
 // A comment!
 /* Another comment! */
+/// A documentation comment!
 pub mod FpInFlix.Exercises.GettingStarted.MyProgram {
     pub def abs(x: Int32): Int32 =
         if (x < 0) -x
@@ -27,4 +28,23 @@ pub mod FpInFlix.Exercises.GettingStarted.MyProgram {
                 Ref.transform(x -> x * i, acc);
             Ref.get(acc)
         }
+
+    // Exercise 2.1: Write a function to compute the nth fibonacci number
+
+    pub def fib(n: Int32): Int32 =
+        @Tailrec
+        def go(x: Int32, current: Int32, next: Int32): Int32 =
+            if (x <= 0) current
+            else go(x - 1, next, current + next);
+        go(n, 0, 1)
+
+
+    // This definition and `formatAbs` are very similar..
+    pub def formatFactorial(n: Int32): String =
+        "The factorial of ${n} is ${factorial(n)}"
+
+    // We can generalize `formatAbs` and `formatFactorial` to
+    // accept a _function_ as a parameter
+    pub def formatResult(name: String, n: Int32, f: Int32 -> Int32): String =
+        "The ${name} of ${n} is ${f(n)}."
 }
