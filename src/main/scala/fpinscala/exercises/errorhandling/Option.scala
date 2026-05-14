@@ -52,13 +52,17 @@ object Option:
     else Some(xs.sum / xs.length)
 
   // Exercise 4.2
+
   def variance(xs: Seq[Double]): Option[Double] = ???
 
   // Exercise 4.3
+
   def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = ???
 
   // Exercise 4.4
+
   def sequence[A](as: List[Option[A]]): Option[List[A]] = ???
 
   // Exercise 4.5
+
   def traverse[A, B](as: List[A])(f: A => Option[B]): Option[List[B]] = ???

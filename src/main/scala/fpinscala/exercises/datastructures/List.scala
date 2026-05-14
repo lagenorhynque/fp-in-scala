@@ -29,6 +29,7 @@ object List: // `List` companion object. Contains functions for creating and wor
     else Cons(as.head, apply(as.tail*))
 
   // Exercise 3.1
+
   @annotation.nowarn // Scala gives a hint here via a warning, so let's disable that
   val result = List(1, 2, 3, 4, 5) match
     case Cons(x, Cons(2, Cons(4, _)))          => x
@@ -63,6 +64,7 @@ object List: // `List` companion object. Contains functions for creating and wor
     ) // `_ * _` is more concise notation for `(x,y) => x * y`; see sidebar
 
   // Exercise 3.2
+
   def tail[A](l: List[A]): List[A] =
     l match
       case Nil         => sys.error("tail of empty list")
@@ -72,12 +74,14 @@ object List: // `List` companion object. Contains functions for creating and wor
   // - 戻り値をOptionで包み、Noneを返す
 
   // Exercise 3.3
+
   def setHead[A](l: List[A], h: A): List[A] =
     l match
       case Nil         => sys.error("setHead on empty list")
       case Cons(_, xs) => Cons(h, xs)
 
   // Exercise 3.4
+
   @annotation.tailrec
   def drop[A](l: List[A], n: Int): List[A] =
     if n <= 0 then l
@@ -87,6 +91,7 @@ object List: // `List` companion object. Contains functions for creating and wor
         case Cons(_, xs) => drop(xs, n - 1)
 
   // Exercise 3.5
+
   @annotation.tailrec
   def dropWhile[A](l: List[A], f: A => Boolean): List[A] =
     l match
@@ -95,6 +100,7 @@ object List: // `List` companion object. Contains functions for creating and wor
       case _                   => l
 
   // Exercise 3.6
+
   def init[A](l: List[A]): List[A] =
     l match
       case Nil          => sys.error("init of empty list")
@@ -115,10 +121,12 @@ object List: // `List` companion object. Contains functions for creating and wor
    */
 
   // Exercise 3.9
+
   def length[A](l: List[A]): Int =
     foldRight(l, 0, (_, acc) => acc + 1)
 
   // Exercise 3.10
+
   @annotation.tailrec
   def foldLeft[A, B](l: List[A], acc: B, f: (B, A) => B): B =
     l match
@@ -137,6 +145,7 @@ object List: // `List` companion object. Contains functions for creating and wor
     foldLeft(l, 0, (c, _) => c + 1)
 
   // Exercise 3.12
+
   def reverse[A](l: List[A]): List[A] =
     foldLeft(l, List[A](), (acc, x) => Cons(x, acc))
 
@@ -149,38 +158,47 @@ object List: // `List` companion object. Contains functions for creating and wor
     foldLeft(reverse(l), acc, (x, y) => f(y, x))
 
   // Exercise 3.14
+
   def appendViaFoldRight[A](l: List[A], r: List[A]): List[A] =
     foldRight(l, r, Cons(_, _))
 
   // Exercise 3.15
+
   def concat[A](l: List[List[A]]): List[A] =
     foldRight(l, Nil: List[A], append)
 
   // Exercise 3.16
+
   def incrementEach(l: List[Int]): List[Int] =
     foldRight(l, List[Int](), (x, xs) => Cons(x + 1, xs))
 
   // Exercise 3.17
+
   def doubleToString(l: List[Double]): List[String] =
     foldRight(l, Nil: List[String], (n, acc) => Cons(n.toString, acc))
 
   // Exercise 3.18
+
   def map[A, B](l: List[A], f: A => B): List[B] =
     foldRight(l, Nil: List[B], (x, acc) => Cons(f(x), acc))
 
   // Exercise 3.19
+
   def filter[A](as: List[A], f: A => Boolean): List[A] =
     foldRight(as, Nil: List[A], (x, acc) => if f(x) then Cons(x, acc) else acc)
 
   // Exercise 3.20
+
   def flatMap[A, B](as: List[A], f: A => List[B]): List[B] =
     concat(map(as, f))
 
   // Exercise 3.21
+
   def filterViaFlatMap[A](as: List[A], f: A => Boolean): List[A] =
     flatMap(as, x => if f(x) then List(x) else Nil)
 
   // Exercise 3.22
+
   def addPairwise(a: List[Int], b: List[Int]): List[Int] =
     (a, b) match
       case (Nil, _)                   => Nil
@@ -188,6 +206,7 @@ object List: // `List` companion object. Contains functions for creating and wor
       case (Cons(x, xs), Cons(y, ys)) => Cons(x + y, addPairwise(xs, ys))
 
   // Exercise 3.23
+
   def zipWith[A, B, C](as: List[A], bs: List[B], f: (A, B) => C): List[C] =
     (as, bs) match
       case (Nil, _)                   => Nil
@@ -195,6 +214,7 @@ object List: // `List` companion object. Contains functions for creating and wor
       case (Cons(x, xs), Cons(y, ys)) => Cons(f(x, y), zipWith(xs, ys, f))
 
   // Exercise 3.24
+
   @annotation.tailrec
   def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean =
     sup match

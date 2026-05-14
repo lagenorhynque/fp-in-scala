@@ -9,16 +9,18 @@ enum Tree[+A]:
     case Branch(l, r) => 1 + l.size + r.size
 
   // Exercise 3.26
+
   def depth: Int = this match
     case Leaf(_)      => 0
     case Branch(l, r) => 1 + (l.depth max r.depth)
 
   // Exercise 3.27
+
   def map[B](f: A => B): Tree[B] = this match
     case Leaf(v)      => Leaf(f(v))
     case Branch(l, r) => Branch(l.map(f), r.map(f))
 
-  // Exercise 3.28
+  // Exercise 3.28-1
 
   def fold[B](f: A => B, g: (B, B) => B): B = this match
     case Leaf(v)      => f(v)
@@ -47,12 +49,14 @@ object Tree:
         if lpos > 0 then lpos else r.firstPositive
 
   // Exercise 3.25
+
   extension (t: Tree[Int])
     def maximum: Int = t match
       case Leaf(v)      => v
       case Branch(l, r) => l.maximum max r.maximum
 
-  // Exercise 3.28
+  // Exercise 3.28-2
+
   extension (t: Tree[Int])
     def maximumViaFold: Int =
       t.fold(identity, _ max _)
