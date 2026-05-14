@@ -184,13 +184,12 @@
 
 ;; Exercise 3.7
 
-;; この foldRight の実装では入力のリストを最終要素まで評価しなければならないため、特定の条件で再帰を中止して値を返すようなことはできない。
+;; この fold-right の実装では入力のリストを最終要素まで評価しなければならないため、特定の条件で再帰を中止して値を返すようなことはできない。
 
 ;; Exercise 3.8
 
 (comment
-  ;; fold-right の引数 acc に Nil 、f に #(Cons %1 %2) を指定すると、もとのリストがそのまま得られる。
-
+  ;; fold-right の引数 acc に nil 、f に #(Cons %1 %2) を指定すると、もとのリストがそのまま得られる。
   (= (fold-right #(Cons. %1 %2) nil (list 1 2 3))
      (list 1 2 3))
 
@@ -397,12 +396,12 @@
     (= (first l) (first prefix)) (recur (rest l) (rest prefix))
     :else false))
 
-(s/fdef has-subsequence
+(s/fdef has-subsequence?
   :args (s/cat :sup ::list
                :sub ::list)
   :ret boolean?)
 
-(defn has-subsequence [sup sub]
+(defn has-subsequence? [sup sub]
   (cond
     (empty? sup) (empty? sub)
     (starts-with sup sub) true
@@ -498,8 +497,8 @@
   (zip-with * (list 1 2 3) (list 4 5))
   (zip-with * (list 1 2) (list 3 4 5))
 
-  (has-subsequence (list 1 2 3 4 5) (list 1 2 3))
-  (has-subsequence (list 1 2 3 4 5) (list 3 4))
-  (has-subsequence (list 1 2 3 4 5) (list 5))
-  (has-subsequence (list 1 2 3 4 5) (list 1 3))
+  (has-subsequence? (list 1 2 3 4 5) (list 1 2 3))
+  (has-subsequence? (list 1 2 3 4 5) (list 3 4))
+  (has-subsequence? (list 1 2 3 4 5) (list 5))
+  (has-subsequence? (list 1 2 3 4 5) (list 1 3))
   )
