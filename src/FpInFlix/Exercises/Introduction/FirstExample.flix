@@ -12,16 +12,22 @@ pub mod FpInFlix.Exercises.Introduction.FirstExample {
             Coffee({price = 2.0})
     }
 
-    pub def chargeCreditCard(price: Float64): Unit \ IO =
-        println("charging ${price}")
+    mod CreditCard {
+        pub def charge(price: Float64): Unit \ IO =
+            println("charging ${price}")
+    }
 
-    pub def buyCoffee(charge: Float64 -> Unit \ IO): Coffee \ IO =
-        let coffee = Coffee.make();
-        let Coffee.Coffee({price}) = coffee;
-        charge(price);
-        coffee
+    mod Cafe {
+        use FpInFlix.Exercises.Introduction.FirstExample.Coffee
+
+        pub def buyCoffee(charge: Float64 -> Unit \ IO): Coffee \ IO =
+            let coffee = Coffee.make();
+            let Coffee.Coffee({price}) = coffee;
+            charge(price);
+            coffee
+    }
 
     pub def example(): Unit \ IO =
-        let cup = buyCoffee(chargeCreditCard);
+        let cup = Cafe.buyCoffee(CreditCard.charge);
         println("a cup of ${cup}")
 }

@@ -42,17 +42,21 @@ pub mod FpInFlix.Exercises.Introduction.ThirdExample {
             |> Traversable.traverse(group -> Foldable.foldLeftM(combine, Nel.head(group), Nel.tail(group)))
     }
 
-    pub def buyCoffee(cc: CreditCard): (Coffee, Charge) =
-        let coffee = Coffee.make();
-        let Coffee.Coffee({price}) = coffee;
-        let charge = Charge.Charge({creditCard = cc, amount = price});
-        (coffee, charge)
+    mod Cafe {
+        use FpInFlix.Exercises.Introduction.ThirdExample.{Charge, Coffee, CreditCard}
 
-    pub def buyCoffees(cc: CreditCard, n: Int32): Result[String, (List[Coffee], Charge)] =
-        let (coffees, charges) = List.repeat(n, buyCoffee(cc)) |> List.unzip;
-        charges
-        |> Foldable.foldLeftM(Charge.combine, Charge.Charge({creditCard = cc, amount = 0.0}))
-        |> Functor.map(charge -> (coffees, charge))
+        pub def buyCoffee(cc: CreditCard): (Coffee, Charge) =
+            let coffee = Coffee.make();
+            let Coffee.Coffee({price}) = coffee;
+            let charge = Charge.Charge({creditCard = cc, amount = price});
+            (coffee, charge)
+
+        pub def buyCoffees(cc: CreditCard, n: Int32): Result[String, (List[Coffee], Charge)] =
+            let (coffees, charges) = List.repeat(n, buyCoffee(cc)) |> List.unzip;
+            charges
+            |> Foldable.foldLeftM(Charge.combine, Charge.Charge({creditCard = cc, amount = 0.0}))
+            |> Functor.map(charge -> (coffees, charge))
+    }
 
     pub def example_combine(): Unit \ IO =
         let resultOk = Charge.combine(
@@ -67,11 +71,11 @@ pub mod FpInFlix.Exercises.Introduction.ThirdExample {
         println("Result of combining charges with different cards: ${resultErr}")
 
     pub def example_buyCoffee(): Unit \ IO =
-        let result = buyCoffee(CreditCard.CreditCard("A"));
+        let result = Cafe.buyCoffee(CreditCard.CreditCard("A"));
         println("Result of buying a coffee: ${result}")
 
     pub def example_buyCoffees(): Unit \ IO =
-        let result = buyCoffees(CreditCard.CreditCard("A"), 3);
+        let result = Cafe.buyCoffees(CreditCard.CreditCard("A"), 3);
         println("Result of buying 3 coffees: ${result}")
 
     pub def example_coalesce(): Unit \ IO =
