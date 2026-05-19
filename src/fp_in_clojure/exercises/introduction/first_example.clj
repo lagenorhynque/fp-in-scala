@@ -29,15 +29,9 @@
     (charge price)
     coffee))
 
-(defn example []
-  (let [cup (buy-coffee charge-credit-card)]
-    (println (str "a cup of " cup))))
-
 (comment
   (require '[clojure.spec.test.alpha :as stest])
   (stest/instrument)
 
   (buy-coffee charge-credit-card)
-
-  (example)
   )
