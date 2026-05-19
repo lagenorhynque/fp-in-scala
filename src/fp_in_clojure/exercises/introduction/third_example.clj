@@ -76,8 +76,6 @@
   (require '[clojure.spec.test.alpha :as stest])
   (stest/instrument)
 
-  (make-coffee)
-
   (combine-charges #::charge{:credit-card #::credit-card{:id "A"}
                              :amount 1.0}
                    #::charge{:credit-card #::credit-card{:id "A"}
@@ -88,14 +86,14 @@
                    #::charge{:credit-card #::credit-card{:id "B"}
                              :amount 2.0})
 
-  (buy-coffee #::credit-card{:id "A"})
-
-  (buy-coffees #::credit-card{:id "A"} 3)
-
   (coalesce-charges [#::charge{:credit-card #::credit-card{:id "A"}
                                :amount 1.0}
                      #::charge{:credit-card #::credit-card{:id "B"}
                                :amount 2.0}
                      #::charge{:credit-card #::credit-card{:id "A"}
                                :amount 3.0}])
+
+  (buy-coffee #::credit-card{:id "A"})
+
+  (buy-coffees #::credit-card{:id "A"} 3)
   )

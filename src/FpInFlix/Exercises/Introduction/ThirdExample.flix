@@ -70,14 +70,6 @@ pub mod FpInFlix.Exercises.Introduction.ThirdExample {
         );
         println("Result of combining charges with different cards: ${resultErr}")
 
-    pub def example_buyCoffee(): Unit \ IO =
-        let result = Cafe.buyCoffee(CreditCard.CreditCard("A"));
-        println("Result of buying a coffee: ${result}")
-
-    pub def example_buyCoffees(): Unit \ IO =
-        let result = Cafe.buyCoffees(CreditCard.CreditCard("A"), 3);
-        println("Result of buying 3 coffees: ${result}")
-
     pub def example_coalesce(): Unit \ IO =
         let result = Charge.coalesce(List#{
             Charge.Charge({creditCard = CreditCard.CreditCard("A"), amount = 1.0}),
@@ -85,4 +77,12 @@ pub mod FpInFlix.Exercises.Introduction.ThirdExample {
             Charge.Charge({creditCard = CreditCard.CreditCard("A"), amount = 3.0})
         });
         println("Result of coalescing charges: ${result}")
+
+    pub def example_buyCoffee(): Unit \ IO =
+        let result = Cafe.buyCoffee(CreditCard.CreditCard("A"));
+        println("Result of buying a coffee: ${result}")
+
+    pub def example_buyCoffees(): Unit \ IO =
+        let result = Cafe.buyCoffees(CreditCard.CreditCard("A"), 3);
+        println("Result of buying 3 coffees: ${result}")
 }
