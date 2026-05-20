@@ -37,7 +37,8 @@
   (if (= (::credit-card/id card-a)
          (::credit-card/id card-b))
     #::charge{:credit-card card-a
-              :amount (+ (::charge/amount charge-a) (::charge/amount charge-b))}
+              :amount (+ (::charge/amount charge-a)
+                         (::charge/amount charge-b))}
     (throw (ex-info "Can't combine charges for different cards"
                     {:card-a card-a :card-b card-b}))))
 
@@ -69,7 +70,9 @@
                 ::charge/charge))
 
 (defn buy-coffees [cc n]
-  (let [[coffees charges] (apply map vector (repeat n (buy-coffee cc)))]
+  (let [[coffees charges] (->> (buy-coffee cc)
+                               (repeat n)
+                               (apply map vector))]
     [coffees (reduce combine-charges #::charge{:credit-card cc :amount 0} charges)]))
 
 (comment

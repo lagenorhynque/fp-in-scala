@@ -52,7 +52,7 @@ pub mod FpInFlix.Exercises.Introduction.ThirdExample {
             (coffee, charge)
 
         pub def buyCoffees(cc: CreditCard, n: Int32): Result[String, (List[Coffee], Charge)] =
-            let (coffees, charges) = List.repeat(n, buyCoffee(cc)) |> List.unzip;
+            let (coffees, charges) = buyCoffee(cc) |> List.repeat(n) |> List.unzip;
             charges
             |> Foldable.foldLeftM(Charge.combine, Charge.Charge({creditCard = cc, amount = 0.0}))
             |> Functor.map(charge -> (coffees, charge))
