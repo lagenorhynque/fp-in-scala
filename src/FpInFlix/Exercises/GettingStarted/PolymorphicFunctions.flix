@@ -6,7 +6,7 @@ pub mod FpInFlix.Exercises.GettingStarted.PolymorphicFunctions {
     // we take a function with which to test each element of the vector.
     pub def findFirst(xs: Vector[a], p: a -> Bool): Int32 =
         @Tailrec
-        def loop(n: Int32): Int32 =
+        def loop(n) =
             if (n >= Vector.size(xs)) -1
             // If the function `p` matches the current element,
             // we've found a match and we return its index in the array.
@@ -18,7 +18,7 @@ pub mod FpInFlix.Exercises.GettingStarted.PolymorphicFunctions {
     // an `Vector[a]` is sorted
     pub def isSorted(xs: Vector[a], gt: (a, a) -> Bool): Bool =
         @Tailrec
-        def go(n: Int32): Bool =
+        def go(n) =
             if (n >= Vector.size(xs) - 1) true
             else if (gt(Vector.get(n, xs), Vector.get(n + 1, xs))) false
             else go(n + 1);

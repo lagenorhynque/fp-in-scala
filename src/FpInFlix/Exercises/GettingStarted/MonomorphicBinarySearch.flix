@@ -3,7 +3,7 @@ pub mod FpInFlix.Exercises.GettingStarted.MonomorphicBinarySearch {
     // Ideally, we could generalize this to work for any `Vector` type.
     pub def findFirst(ss: Vector[String], key: String): Int32 =
         @Tailrec
-        def loop(n: Int32): Int32 =
+        def loop(n) =
             // If `n` is past the end of the vector, return `-1`
             // indicating the key doesn't exist in the vector.
             if (n >= Vector.size(ss)) -1

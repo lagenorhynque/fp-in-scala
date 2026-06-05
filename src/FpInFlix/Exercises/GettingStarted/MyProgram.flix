@@ -15,7 +15,7 @@ pub mod FpInFlix.Exercises.GettingStarted.MyProgram {
     // A definition of factorial, using a local, tail recursive function
     pub def factorial(n: Int32): Int32 =
         @Tailrec
-        def go(x: Int32, acc: Int32): Int32 =
+        def go(x, acc) =
             if (x <= 0) acc
             else go(x - 1, x * acc);
         go(n, 1)
@@ -33,7 +33,7 @@ pub mod FpInFlix.Exercises.GettingStarted.MyProgram {
 
     pub def fib(n: Int32): Int32 =
         @Tailrec
-        def go(x: Int32, current: Int32, next: Int32): Int32 =
+        def go(x, current, next) =
             if (x <= 0) current
             else go(x - 1, next, current + next);
         go(n, 0, 1)
