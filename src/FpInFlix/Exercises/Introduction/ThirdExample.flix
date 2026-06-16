@@ -35,11 +35,11 @@ pub mod FpInFlix.Exercises.Introduction.ThirdExample {
 
         pub def coalesce(charges: List[Charge]): Result[String, List[Charge]] =
             charges
-            |> List.groupBy(charge ->
-               let Charge({creditCard | _}) = charge;
-               creditCard
-            )
-            |> Traversable.traverse(group -> Foldable.foldLeftM(combine, Nel.head(group), Nel.tail(group)))
+                |> List.groupBy(charge ->
+                    let Charge({creditCard | _}) = charge;
+                    creditCard
+                )
+                |> Traversable.traverse(group -> Foldable.foldLeftM(combine, Nel.head(group), Nel.tail(group)))
     }
 
     mod Cafe {
@@ -54,8 +54,8 @@ pub mod FpInFlix.Exercises.Introduction.ThirdExample {
         pub def buyCoffees(cc: CreditCard, n: Int32): Result[String, (List[Coffee], Charge)] =
             let (coffees, charges) = buyCoffee(cc) |> List.repeat(n) |> List.unzip;
             charges
-            |> Foldable.foldLeftM(Charge.combine, Charge.Charge({creditCard = cc, amount = 0.0}))
-            |> Functor.map(charge -> (coffees, charge))
+                |> Foldable.foldLeftM(Charge.combine, Charge.Charge({creditCard = cc, amount = 0.0}))
+                |> Functor.map(charge -> (coffees, charge))
     }
 
     pub def example_combine(): Unit \ IO =
