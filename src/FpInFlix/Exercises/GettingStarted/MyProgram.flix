@@ -41,7 +41,7 @@ pub mod FpInFlix.Exercises.GettingStarted.MyProgram {
 
     // This definition and `formatAbs` are very similar..
     pub def formatFactorial(n: Int32): String =
-        "The factorial of ${n} is ${factorial(n)}"
+        "The factorial of ${n} is ${factorial(n)}."
 
     // We can generalize `formatAbs` and `formatFactorial` to
     // accept a _function_ as a parameter
