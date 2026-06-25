@@ -5,4 +5,4 @@
 //> using options -source:future
 //> using options -Xkind-projector:underscores
 
-//> using dep org.scalameta::munit:1.3.0
+//> using dep org.scalameta::munit:1.3.3

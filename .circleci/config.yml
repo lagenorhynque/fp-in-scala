@@ -60,7 +60,7 @@ jobs:
           name: Install static code analysis tools
           environment:
             SCALAFMT_VERSION: 3.11.1
-            SCALAFIX_VERSION: 0.14.6
+            SCALAFIX_VERSION: 0.14.7
           command: |
             # Scalafmt
             cs install scalafmt:${SCALAFMT_VERSION}
@@ -89,7 +89,7 @@ jobs:
       - run:
           name: Install Flix
           environment:
-            FLIX_VERSION: 0.73.0
+            FLIX_VERSION: 0.74.0
           command: |
             wget https://github.com/flix/flix/releases/download/v${FLIX_VERSION}/flix.jar
             echo 'exec java -jar ${CIRCLE_WORKING_DIRECTORY}/flix.jar' > flix

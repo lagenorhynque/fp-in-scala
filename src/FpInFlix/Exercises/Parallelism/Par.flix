@@ -15,7 +15,7 @@ pub mod FpInFlix.Exercises.Parallelism.Par {
         checked_cast(CompletableFuture.completedFuture(a))
 
     /*
-    // Scala版の忠実な移植実装: https://github.com/flix/flix/issues/12876 のため正常動作しない
+    // Scala版の忠実な移植実装: https://github.com/flix/flix/issues/12876 がFlix 0.74で修正されたため動作する
     def unitFuture(a: a): Future[a] \ IO =
         new Future[a] {
             def isDone(_this: Future[a]): Bool = true
@@ -49,7 +49,7 @@ pub mod FpInFlix.Exercises.Parallelism.Par {
         )
 
     /*
-    // Scala版の忠実な移植実装: https://github.com/flix/flix/issues/12876 のため正常動作しない
+    // Scala版の忠実な移植実装: https://github.com/flix/flix/issues/12876 がFlix 0.74で修正されたため動作する
     pub def fork(pa: Lazy[Par[a]]): Par[a] =
         Par(es ->
             es.submit(new Callable[a] {
