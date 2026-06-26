@@ -25,7 +25,7 @@
   (s/keys :req [::charge/credit-card
                 ::charge/amount]))
 
-(s/fdef combine-chages
+(s/fdef combine-charges
   :args (s/cat :charge-a ::charge/charge
                :charge-b ::charge/charge)
   :ret ::charge/charge)

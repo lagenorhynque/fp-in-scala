@@ -24,7 +24,7 @@
       :else (recur (inc n)))))
 
 ;; Exercise 2.2: Implement a polymorphic function to check whether
-;; a sequnece is sorted
+;; a sequence is sorted
 
 (s/fdef sorted?
   :args (s/cat :as (s/coll-of any?)
