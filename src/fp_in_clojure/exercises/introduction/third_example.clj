@@ -73,7 +73,7 @@
   (let [[coffees charges] (->> (buy-coffee cc)
                                (repeat n)
                                (apply map vector))]
-    [coffees (reduce combine-charges #::charge{:credit-card cc :amount 0} charges)]))
+    [coffees (reduce combine-charges #::charge{:credit-card cc :amount 0.0} charges)]))
 
 (comment
   (require '[clojure.spec.test.alpha :as stest])
