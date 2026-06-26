@@ -1,5 +1,5 @@
 (ns fp-in-clojure.exercises.data-structures.list
-  (:refer-clojure :exclude [concat drop drop-while filter list map reverse])
+  (:refer-clojure :exclude [concat drop drop-while filter list list? map reverse])
   (:require
    [clojure.core.match :refer [match]]
    [clojure.spec.alpha :as s])
@@ -31,8 +31,15 @@
        (or (nil? (.-tail x))
            (cons? (.-tail x)))))
 
-(s/def ::list
-  (s/nilable cons?))
+(s/fdef list?
+  :args (s/cat :x any?)
+  :ret boolean?)
+
+(defn list? [x]
+  (or (nil? x)
+      (cons? x)))
+
+(s/def ::list list?)
 
 (s/fdef list
   :args (s/cat :args (s/* any?))

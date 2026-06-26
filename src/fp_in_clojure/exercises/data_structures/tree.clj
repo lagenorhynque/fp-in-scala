@@ -22,9 +22,15 @@
        ((some-fn leaf? branch?) (:left x))
        ((some-fn leaf? branch?) (:right x))))
 
-(s/def ::tree
-  (s/or :leaf leaf?
-        :branch branch?))
+(s/fdef tree?
+  :args (s/cat :x any?)
+  :ret boolean?)
+
+(defn tree? [x]
+  (or (leaf? x)
+      (branch? x)))
+
+(s/def ::tree tree?)
 
 (s/fdef size
   :args (s/cat :t ::tree)
