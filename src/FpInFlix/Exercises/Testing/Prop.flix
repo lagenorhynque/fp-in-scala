@@ -105,15 +105,15 @@ pub mod FpInFlix.Exercises.Testing.Prop {
             let props = DelayList.startFrom(0)
                 |> DelayList.take(Int32.min(TestCases.toInt(n), MaxSize.toInt(max)) + 1)
                 |> DelayList.map(i -> forAll(sa(i), f));
-            let prop = props
+            let Prop(h) = props
                 |> DelayList.map(p ->
                     Prop((max2, _, rng2) ->
                         let Prop(g) = p;
                         g(max2, casesPerSize, rng2)
                     )
                 )
-                |> DelayList.reduceLeft((&&));
-            let Prop(h) = unchecked_cast(Option.getOrAbort(prop) as _ \ {});
+                |> DelayList.reduceLeft((&&))
+                |> Option.getWithDefault(Prop((_, _, _) -> Result.Passed));
             h(max, n, rng)
         )
 
