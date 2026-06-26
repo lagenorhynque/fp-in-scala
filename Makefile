@@ -23,7 +23,7 @@ clj-kondo-lint:
 
 .PHONY: joker-lint
 joker-lint:
-	@joker --lint --working-dir src
+	@joker --lint --working-dir .
 
 .PHONY: test-clj
 test-clj:
