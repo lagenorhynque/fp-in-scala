@@ -6,11 +6,11 @@
 ;; Ideally, we could generalize this to work for any `seqable?` type.
 
 (s/fdef find-first
-  :args (s/cat :ss (s/coll-of string?)
-               :k string?)
+  :args (s/cat :k string?
+               :ss (s/coll-of string?))
   :ret int?)
 
-(defn find-first [ss k]
+(defn find-first [k ss]
   ;; Start the loop at the first element of the sequence.
   (loop [n 0]
     (cond
@@ -27,13 +27,13 @@
   (require '[clojure.spec.test.alpha :as stest])
   (stest/instrument)
 
-  (find-first ["b" "e" "a" "d" "c"] "b")
+  (find-first "b" ["b" "e" "a" "d" "c"])
 
-  (find-first ["b" "e" "a" "d" "c"] "d")
+  (find-first "d" ["b" "e" "a" "d" "c"])
 
-  (find-first ["b" "e" "a" "d" "c"] "c")
+  (find-first "c" ["b" "e" "a" "d" "c"])
 
-  (find-first ["b" "e" "a" "d" "c"] "f")
+  (find-first "f" ["b" "e" "a" "d" "c"])
 
-  (find-first [] "b")
+  (find-first "b" [])
   )

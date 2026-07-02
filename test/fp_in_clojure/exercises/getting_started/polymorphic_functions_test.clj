@@ -33,11 +33,11 @@
 
 (tc/defspec sorted?-for-sorted-seq-test 1000
   (prop/for-all [coll gen-sorted-seq]
-    (true? (sut/sorted? coll >))))
+    (true? (sut/sorted? > coll))))
 
 (tc/defspec sorted?-for-unsorted-seq-test 1000
   (prop/for-all [coll gen-unsorted-seq]
-    (false? (sut/sorted? coll >))))
+    (false? (sut/sorted? > coll))))
 
 (tc/defspec curry-test 1000
   (prop/for-all [n (s/gen int?)

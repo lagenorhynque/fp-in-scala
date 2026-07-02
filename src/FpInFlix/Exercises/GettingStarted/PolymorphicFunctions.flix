@@ -4,7 +4,7 @@ pub mod FpInFlix.Exercises.GettingStarted.PolymorphicFunctions {
     // Instead of hard-coding `String`, we take a type `a` as a parameter.
     // And instead of hard-coding an equality check for a given key,
     // we take a function with which to test each element of the vector.
-    pub def findFirst(xs: Vector[a], p: a -> Bool): Int32 =
+    pub def findFirst(p: a -> Bool, xs: Vector[a]): Int32 =
         @Tailrec
         def loop(n) =
             if (n >= Vector.size(xs)) -1
@@ -16,7 +16,7 @@ pub mod FpInFlix.Exercises.GettingStarted.PolymorphicFunctions {
 
     // Exercise 2.2: Implement a polymorphic function to check whether
     // an `Vector[a]` is sorted
-    pub def isSorted(xs: Vector[a], gt: (a, a) -> Bool): Bool =
+    pub def isSorted(gt: (a, a) -> Bool, xs: Vector[a]): Bool =
         @Tailrec
         def go(n) =
             if (n >= Vector.size(xs) - 1) true
