@@ -38,7 +38,6 @@ pub mod FpInFlix.Exercises.GettingStarted.MyProgram {
             else go(x - 1, next, current + next);
         go(n, 0, 1)
 
-
     // This definition and `formatAbs` are very similar..
     pub def formatFactorial(n: Int32): String =
         "The factorial of ${n} is ${factorial(n)}."
