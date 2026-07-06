@@ -67,4 +67,13 @@ pub mod FpInFlix.Exercises.Monoids.Foldable {
                 case Some(a) => f(a)
             }
     }
+
+    instance Foldable[Map[k]] {
+        pub redef foldRight(f: (a, b) -> b, acc: b, fa: Map[k, a]): b =
+            Map.foldRight(f, acc, fa)
+        pub redef foldLeft(f: (b, a) -> b, acc: b, fa: Map[k, a]): b =
+            Map.foldLeft(f, acc, fa)
+        pub redef toList(fa: Map[k, a]): List[a] =
+            Map.valuesOf(fa)
+    }
 }
