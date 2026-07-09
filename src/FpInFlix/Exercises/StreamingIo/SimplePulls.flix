@@ -25,41 +25,39 @@ pub mod FpInFlix.Exercises.StreamingIo.SimplePulls {
             Files.newBufferedWriter(Paths.get(file))
 
         def withResource(
-            rc: Region[r],
             acquire: Unit -> Closeable \ ef1,
             handle: Closeable -> a \ ef2
-        ): Result[IOException, a] \ ef1 + ef2 + r + IO =
-            let closable = Ref.fresh(rc, Option.empty());
-            let result = try {
-                Ref.put(Some(acquire()), closable);
-                closable
-                    |> Ref.get
-                    |> Option.foldLeft((_, c) ->
-                        c |> handle |> Ok,
-                        Err(new IOException("unexpected"))
-                    )
-            } catch {
-                case e: IOException => Err(e)
-            };
-            closable |> Ref.get |> Option.forEach(c -> c.close());
-            result
+        ): Result[IOException, a] \ ef1 + ef2 + IO =
+            region rc {
+                let closable = Ref.fresh(rc, Option.empty());
+                let result = try {
+                    Ref.put(Some(acquire()), closable);
+                    closable
+                        |> Ref.get
+                        |> Option.foldLeft((_, c) ->
+                            c |> handle |> Ok,
+                            Err(new IOException("unexpected"))
+                        )
+                } catch {
+                    case e: IOException => Err(e)
+                };
+                closable |> Ref.get |> Option.forEach(c -> c.close());
+                result
+            }
+
         def withReader(
-            rc: Region[r],
             file: String,
             handle: BufferedReader -> a \ ef
-        ): Result[IOException, a] \ ef + r + IO =
+        ): Result[IOException, a] \ ef + IO =
             withResource(
-                rc,
                 () -> checked_cast(bufferedReader(file)),
                 unchecked_cast(handle as Closeable -> a \ ef)
             )
         def withWriter(
-            rc: Region[r],
             file: String,
             handle: BufferedWriter -> a \ ef
-        ): Result[IOException, a] \ ef + r + IO =
+        ): Result[IOException, a] \ ef + IO =
             withResource(
-                rc,
                 () -> checked_cast(bufferedWriter(file)),
                 unchecked_cast(handle as Closeable -> a \ ef)
             )
@@ -82,18 +80,18 @@ pub mod FpInFlix.Exercises.StreamingIo.SimplePulls {
             )
 
         pub def convert(inputFile: String, outputFile: String): Result[String, Unit] \ IO =
-            region rc {
-                withReader(rc, inputFile, reader ->
-                    withWriter(rc, outputFile, writer ->
+            withReader(inputFile, reader ->
+                withWriter(outputFile, writer ->
+                    region rc {
                         lineIterator(rc, reader)
                             |> conversion
                             |> Iterator.forEach(a -> {
                                 writer.write("${a}");
                                 writer.newLine()
                             })
-                    )
+                    }
                 )
-            }
+            )
                 |> Result.flatten
                 |> inspectEx
     }
