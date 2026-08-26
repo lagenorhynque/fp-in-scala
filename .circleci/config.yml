@@ -89,7 +89,7 @@ jobs:
       - run:
           name: Install Flix
           environment:
-            FLIX_VERSION: 0.75.1
+            FLIX_VERSION: 0.75.3
           command: |
             wget https://github.com/flix/flix/releases/download/v${FLIX_VERSION}/flix.jar
             echo 'exec java -jar ${CIRCLE_WORKING_DIRECTORY}/flix.jar' > flix
