@@ -48,7 +48,7 @@ pub mod FpInFlix.Exercises.Laziness.LazyList {
             case _ => ll
         }
 
-     pub def map(f: a -> b, ll: LazyList[a]): LazyList[b] =
+    pub def map(f: a -> b, ll: LazyList[a]): LazyList[b] =
         foldRight((x, acc) -> Cons(lazy f(x), acc), lazy Empty, ll)
 
     pub def ones(): LazyList[Int32] =
