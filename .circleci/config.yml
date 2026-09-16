@@ -13,8 +13,8 @@ jobs:
           name: Install static code analysis tools
           environment:
             CLJSTYLE_VERSION: 0.17.642
-            CLJ_KONDO_VERSION: 2026.05.25
-            JOKER_VERSION: 1.9.0
+            CLJ_KONDO_VERSION: 2026.08.04
+            JOKER_VERSION: 1.10.0
           command: |
             # cljstyle
             wget https://github.com/greglook/cljstyle/releases/download/${CLJSTYLE_VERSION}/cljstyle_${CLJSTYLE_VERSION}_linux_amd64.zip
@@ -89,7 +89,7 @@ jobs:
       - run:
           name: Install Flix
           environment:
-            FLIX_VERSION: 0.75.3
+            FLIX_VERSION: 0.76.0
           command: |
             wget https://github.com/flix/flix/releases/download/v${FLIX_VERSION}/flix.jar
             echo 'exec java -jar ${CIRCLE_WORKING_DIRECTORY}/flix.jar' > flix
