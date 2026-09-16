@@ -103,150 +103,16 @@ pub mod FpInFlix.Exercises.Parsing.Parsers {
             map(_ -> a, slice(p))
 
         pub def opL(op: parser[(a, a) -> a], p: parser[a]): parser[a] =
-            map2(
-                (a, ts) -> List.foldLeft((acc, t) ->
+            map2((a, ts) ->
+                List.foldLeft((acc, t) ->
                     let (f, a2) = t;
-                    f(acc, a2), a, ts),
+                    f(acc, a2), a, ts
+                ),
                 p,
                 lazy many(op ** lazy p)
             )
 
         pub def root(p: parser[a]): parser[a] =
             p <* lazy eof()
-    }
-
-    mod Location {
-        use FpInFlix.Exercises.Parsing.Parsers.ParseError
-
-        pub enum Location({input = String, offset = Int32})
-
-        instance Eq[Location] {
-            pub def eq(loc1: Location, loc2: Location): Bool =
-                let Location({input = input1, offset = offset1}) = loc1;
-                let Location({input = input2, offset = offset2}) = loc2;
-                input1 == input2 and offset1 == offset2
-        }
-
-        pub def line(loc: Location): Int32 =
-            let Location({input, offset}) = loc;
-            input |> String.slice(start = 0, end = offset + 1) |> String.countSubstring(substr = "\n") + 1
-
-        pub def col(loc: Location): Int32 =
-            let Location({input, offset}) = loc;
-            input
-                |> String.slice(start = 0, end = offset + 1)
-                |> String.findIndexOfRight(c -> c == '\n')
-                |> Option.foldLeft((_, lineStart) -> offset - lineStart, offset + 1)
-
-        pub def toError(msg: String, loc: Location): ParseError =
-            ParseError(List#{(loc, msg)})
-
-        pub def advanceBy(n: Int32, loc: Location): Location =
-            let Location(l) = loc;
-            Location({offset = l#offset + n | l})
-
-        pub def remaining(loc: Location): String =
-            let Location({input, offset}) = loc;
-            String.sliceRight(start = offset, input)
-
-        pub def slice(n: Int32, loc: Location): String =
-            let Location({input, offset}) = loc;
-            String.slice(start = offset, end = offset + n, input)
-
-        pub def currentLine(loc: Location): String =
-            let Location({input | _}) = loc;
-            if (String.length(input) > 1)
-                input
-                    |> String.lines
-                    |> List.drop(Location.line(loc) - 1)
-                    |> List.head
-                    |> Option.getWithDefault("")
-            else ""
-
-        pub def columnCaret(loc: Location): String =
-            "${String.repeat(Location.col(loc) - 1, " ")}^"
-    }
-
-    mod ParseError {
-        use FpInFlix.Exercises.Parsing.Parsers.Location
-
-        pub enum ParseError(List[(Location, String)]) with Eq
-
-        instance ToString[ParseError] {
-            pub def toString(err: ParseError): String =
-                let ParseError(es) = err;
-                if (List.isEmpty(es)) "no error message"
-                else
-                    let collapsed = collapseStack(es);
-                    let context =
-                        collapsed
-                            |> List.last
-                            |> Option.map(t -> "\n\n${t |> fst |> Location.currentLine}")
-                            |> Option.getWithDefault("")
-                        +
-                        collapsed
-                            |> List.last
-                            |> Option.map(t -> "\n${t |> fst |> Location.columnCaret}")
-                            |> Option.getWithDefault("");
-                    collapsed
-                        |> List.map(t ->
-                            let (loc, msg) = t;
-                            "${formatLoc(loc)} ${msg}"
-                        )
-                        |> List.join("\n")
-                        + context
-        }
-
-        pub def push(loc: Location, msg: String, err: ParseError): ParseError =
-            let ParseError(es) = err;
-            ParseError((loc, msg) :: es)
-
-        pub def label(msg: String, err: ParseError): ParseError =
-            err |> latestLoc |> Option.map(l -> (l, msg)) |> Option.toList |> ParseError
-
-        pub def latest(err: ParseError): Option[(Location, String)] =
-            let ParseError(es) = err;
-            List.last(es)
-
-        pub def latestLoc(err: ParseError): Option[Location] =
-            err |> latest |> Option.map(fst)
-
-        def collapseStack(s: List[(Location, String)]): List[(Location, String)] =
-            s
-                |> List.groupBy(fst)
-                |> List.map(xs ->
-                    (xs |> Nel.head |> fst, xs |> Nel.map(snd) |> Nel.join("; "))
-                )
-                |> List.sortBy(t ->
-                    let Location({offset | _}) = fst(t);
-                    offset
-                )
-
-        def formatLoc(loc: Location): String =
-            "${Location.line(loc)}.${Location.col(loc)}"
-    }
-
-    mod Examples {
-        use FpInFlix.Exercises.Parsing.Parsers.{Parsers => P}
-
-        pub def nonNegativeInt(): parser[Int32] with P[parser] =
-            P.flatMap(
-                Int32.fromString
-                    >> Option.foldLeft(
-                        (_, n) -> P.succeed(n),
-                        P.fail("expected an integer")
-                    ),
-                P.regex(regex"[0-9]+")
-            )
-
-        pub def nConsecutiveAs(): parser[Int32] with P[parser] =
-            P.flatMap(
-                n ->
-                    P.map(
-                        _ -> n,
-                        P.listOfN(n, P.char('a'))
-                    ),
-                nonNegativeInt()
-            )
     }
 }
