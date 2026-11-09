@@ -1,6 +1,6 @@
 pub mod FpInFlix.Exercises.IoMonad.Io3 {
     mod Free {
-        pub enum Free[f: Type -> Type, a: Type] {
+        enum Free[f: Type -> Type, a: Type] {
             case Pure(a)
             case Free(f[Free[f, a]])
         }
@@ -38,7 +38,7 @@ pub mod FpInFlix.Exercises.IoMonad.Io3 {
         use FpInFlix.Exercises.IoMonad.Io3.Free
         use FpInFlix.Exercises.IoMonad.Io3.fahrenheitToCelsius
 
-        pub enum Console[next] {
+        enum Console[next] {
             case ReadLine(Option[String] -> next)
             case PrintLine(String, next)
         }

@@ -1,5 +1,5 @@
 pub mod FpInFlix.Exercises.LocalEffects.St {
-    enum St[s, a](s -> (a, s))
+    pub enum St[s, a](s -> (a, s))
 
     instance Functor[St[s]] {
         pub def map(f: a -> b \ ef, x: St[s, a]): St[s, b] \ ef =

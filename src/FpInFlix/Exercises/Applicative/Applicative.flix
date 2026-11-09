@@ -26,7 +26,7 @@ pub mod FpInFlix.Exercises.Applicative.Applicative {
         use FpInFlix.Exercises.Applicative.Applicative
         use FpInFlix.Exercises.Monads.Functor
 
-        pub enum ZipList[a](DelayList[a]) with Eq, ToString
+        enum ZipList[a](DelayList[a]) with Eq, ToString
 
         pub def fromDelayList(dl: DelayList[a]): ZipList[a] =
             ZipList(dl)
@@ -50,7 +50,7 @@ pub mod FpInFlix.Exercises.Applicative.Applicative {
     }
 
     mod Semigroup {
-        pub trait Semigroup[a] {
+        trait Semigroup[a] {
             pub def combine(a1: a, a2: a): a
         }
     }
@@ -58,7 +58,7 @@ pub mod FpInFlix.Exercises.Applicative.Applicative {
     mod Monoid {
         use FpInFlix.Exercises.Applicative.Applicative.Semigroup
 
-        pub trait Monoid[a] with Semigroup[a] {
+        trait Monoid[a] with Semigroup[a] {
             pub def empty(): a
         }
     }
@@ -67,7 +67,7 @@ pub mod FpInFlix.Exercises.Applicative.Applicative {
         use FpInFlix.Exercises.Applicative.Applicative.NonEmptyList
         use FpInFlix.Exercises.Applicative.Applicative.Semigroup
 
-        pub enum NonEmptyList[a](a, List[a]) with Eq, ToString
+        enum NonEmptyList[a](a, List[a]) with Eq, ToString
 
         pub def toList(xs: NonEmptyList[a]): List[a] =
             let NonEmptyList(head, tail) = xs;
@@ -86,7 +86,7 @@ pub mod FpInFlix.Exercises.Applicative.Applicative {
         use FpInFlix.Exercises.Applicative.Applicative.{Monoid, Semigroup}
         use FpInFlix.Exercises.Monads.Functor
 
-        pub enum Const[a, _b](a)
+        enum Const[a, _b](a)
 
         instance Functor[Const[m]] with Monoid[m] {
             pub def map(f: a -> b, fa: Const[m, a]): Const[m, b] =

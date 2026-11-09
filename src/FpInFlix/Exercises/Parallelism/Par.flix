@@ -2,7 +2,7 @@ pub mod FpInFlix.Exercises.Parallelism.Par {
     import java.lang.Runnable
     import java.util.concurrent.{CompletableFuture, ExecutorService, Executors, Future}
 
-    enum Par[a](ExecutorService -> Future[a] \ IO)
+    pub enum Par[a](ExecutorService -> Future[a] \ IO)
 
     pub def runPar(es: ExecutorService, pa: Par[a]): Future[a] \ IO =
         let Par(f) = pa;

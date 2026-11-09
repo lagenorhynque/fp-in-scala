@@ -9,7 +9,7 @@ pub mod FpInFlix.Exercises.Parsing.Reference {
     mod ParseResult {
         use FpInFlix.Exercises.Parsing.Parsers.ParseError
 
-        pub enum ParseResult[a] {
+        enum ParseResult[a] {
             case Success(a, Int32)
             case Failure(ParseError, Bool)
         }

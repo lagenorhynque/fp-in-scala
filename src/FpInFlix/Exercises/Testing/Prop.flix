@@ -2,10 +2,10 @@ pub mod FpInFlix.Exercises.Testing.Prop {
     use FpInFlix.Exercises.State.{Rng, State}
     use FpInFlix.Exercises.Testing.Gen
 
-    enum Prop((MaxSize, TestCases, Rng) -> Result.Result)
+    pub enum Prop((MaxSize, TestCases, Rng) -> Result.Result)
 
     mod SuccessCount {
-        pub enum SuccessCount(Int32) with Eq, ToString
+        enum SuccessCount(Int32) with Eq, ToString
 
         pub def toInt(x: SuccessCount): Int32 =
             let SuccessCount(n) = x;
@@ -52,7 +52,7 @@ pub mod FpInFlix.Exercises.Testing.Prop {
     mod Result {
         use FpInFlix.Exercises.Testing.Prop.{FailedCase, SuccessCount}
 
-        pub enum Result {
+        enum Result {
             case Passed
             case Falsified({failure = FailedCase, successes = SuccessCount})
             case Proved

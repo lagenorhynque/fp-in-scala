@@ -1,7 +1,7 @@
 pub mod FpInFlix.Exercises.Testing.Gen {
     use FpInFlix.Exercises.State.{Rng, State}
 
-    enum Gen[a](State[Rng, a])
+    pub enum Gen[a](State[Rng, a])
 
     pub def map(f: a -> b, ga: Gen[a]): Gen[b] =
         let Gen(sa) = ga;
