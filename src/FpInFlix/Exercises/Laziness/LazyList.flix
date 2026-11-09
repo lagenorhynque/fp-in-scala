@@ -9,14 +9,14 @@ pub mod FpInFlix.Exercises.Laziness.LazyList {
     instance ToString[LazyList[a]] with ToString[a] {
         pub def toString(ll: LazyList[a]): String =
             match ll {
-                case Empty => "LazyList.Empty"
+                case Empty      => "LazyList.Empty"
                 case Cons(_, _) => "LazyList.Cons(<unevaluated>, <unevaluated>)"
             }
     }
 
     pub def toListRecursive(ll: LazyList[a]): List[a] =
         match ll {
-            case Empty => Nil
+            case Empty            => Nil
             case Cons(head, tail) => force head :: toListRecursive(force tail)
         }
 
@@ -24,28 +24,28 @@ pub mod FpInFlix.Exercises.Laziness.LazyList {
         @Tailrec
         def go(xs, acc) =
             match xs {
-                case Empty => List.reverse(acc)
+                case Empty            => List.reverse(acc)
                 case Cons(head, tail) => go(force tail, force head :: acc)
             };
         go(ll, Nil)
 
     pub def foldRight(f: (a, Lazy[b]) -> b, z: Lazy[b], ll: LazyList[a]): b =
         match ll {
-            case Empty => force z
+            case Empty            => force z
             case Cons(head, tail) => f(force head, lazy foldRight(f, z, force tail))
         }
 
     pub def take(n: Int32, ll: LazyList[a]): LazyList[a] =
         match ll {
             case Cons(head, tail) if n > 1 => Cons(head, lazy take(n - 1, force tail))
-            case Cons(head, _) if n == 1 => Cons(head, lazy Empty)
-            case _ => Empty
+            case Cons(head, _) if n == 1   => Cons(head, lazy Empty)
+            case _                         => Empty
         }
 
     pub def drop(n: Int32, ll: LazyList[a]): LazyList[a] =
         match ll {
             case Cons(_, tail) if n > 0 => drop(n - 1, force tail)
-            case _ => ll
+            case _                      => ll
         }
 
     pub def map(f: a -> b, ll: LazyList[a]): LazyList[b] =

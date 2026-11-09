@@ -18,9 +18,11 @@ pub mod FpInFlix.Exercises.Parsing.Parsers {
             regex(regex"\\d+")
 
         pub def thru(s: String): parser[String] =
-            regex(".*?${Regex.quote(s)}"
-                |> String.toRegex
-                |> Result.getWithDefault(Regex.unmatchable()))
+            regex(
+                ".*?${Regex.quote(s)}"
+                    |> String.toRegex
+                    |> Result.getWithDefault(Regex.unmatchable())
+            )
 
         pub def quoted(): parser[String] =
             string("\"") *> lazy thru("\"") |> map(String.dropRight(1))
@@ -52,8 +54,10 @@ pub mod FpInFlix.Exercises.Parsing.Parsers {
         pub def attempt(p: parser[a]): parser[a]
 
         pub def listOfN(n: Int32, p: parser[a]): parser[List[a]] =
-            if (n <= 0) succeed(Nil)
-            else map2(List.cons, p, lazy listOfN(n - 1, p))
+            if (n <= 0)
+                succeed(Nil)
+            else
+                map2(List.cons, p, lazy listOfN(n - 1, p))
 
         pub def map(f: a -> b, p: parser[a]): parser[b] =
             flatMap(f >> succeed, p)
@@ -103,11 +107,15 @@ pub mod FpInFlix.Exercises.Parsing.Parsers {
             map(_ -> a, slice(p))
 
         pub def opL(op: parser[(a, a) -> a], p: parser[a]): parser[a] =
-            map2((a, ts) ->
-                List.foldLeft((acc, t) ->
-                    let (f, a2) = t;
-                    f(acc, a2), a, ts
-                ),
+            map2(
+                (a, ts) ->
+                    List.foldLeft(
+                        (acc, t) ->
+                            let (f, a2) = t;
+                            f(acc, a2),
+                        a,
+                        ts
+                    ),
                 p,
                 lazy many(op ** lazy p)
             )

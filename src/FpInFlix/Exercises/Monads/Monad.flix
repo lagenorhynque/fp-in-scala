@@ -31,17 +31,20 @@ pub mod FpInFlix.Exercises.Monads.Monad {
     }
 
     pub def zipWithIndex(xs: List[a]): List[(Int32, a)] =
-        List.foldLeft((acc, x) ->
-            Monad.flatMap(ys ->
-                Monad.flatMap(n ->
-                    Functor.map(_ ->
-                        (n, x) :: ys,
-                        State.set(n + 1)
-                    ),
-                    State.get()
+        List.foldLeft(
+            (acc, x) ->
+                Monad.flatMap(
+                    ys ->
+                        Monad.flatMap(
+                            n ->
+                                Functor.map(
+                                    _ -> (n, x) :: ys,
+                                    State.set(n + 1)
+                                ),
+                            State.get()
+                        ),
+                    acc
                 ),
-                acc
-            ),
             Monad.unit(Nil),
             xs
         )

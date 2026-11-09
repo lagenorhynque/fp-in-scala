@@ -6,13 +6,13 @@ pub mod FpInFlix.Exercises.DataStructures.Tree {
 
     pub def size(t: Tree[a]): Int32 =
         match t {
-            case Leaf(_) => 1
+            case Leaf(_)             => 1
             case Branch(left, right) => 1 + size(left) + size(right)
         }
 
-     pub def depth(t: Tree[a]): Int32 =
+    pub def depth(t: Tree[a]): Int32 =
         match t {
-            case Leaf(_) => 0
+            case Leaf(_)             => 0
             case Branch(left, right) => 1 + Int32.max(depth(left), depth(right))
         }
 }

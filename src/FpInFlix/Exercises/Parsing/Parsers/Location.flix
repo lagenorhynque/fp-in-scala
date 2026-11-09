@@ -44,7 +44,8 @@ pub mod FpInFlix.Exercises.Parsing.Parsers.Location {
                 |> List.drop(Location.line(loc) - 1)
                 |> List.head
                 |> Option.getWithDefault("")
-        else ""
+        else
+            ""
 
     pub def columnCaret(loc: Location): String =
         "${String.repeat(Location.col(loc) - 1, " ")}^"

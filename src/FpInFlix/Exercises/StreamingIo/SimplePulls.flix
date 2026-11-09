@@ -34,8 +34,9 @@ pub mod FpInFlix.Exercises.StreamingIo.SimplePulls {
                     Ref.put(Some(acquire()), closable);
                     closable
                         |> Ref.get
-                        |> Option.foldLeft((_, c) ->
-                            c |> handle |> Ok,
+                        |> Option.foldLeft(
+                            (_, c) ->
+                                c |> handle |> Ok,
                             Err(new IOException("unexpected"))
                         )
                 } catch {
@@ -63,34 +64,44 @@ pub mod FpInFlix.Exercises.StreamingIo.SimplePulls {
             )
 
         def inspectEx(result: Result[IOException, a]): Result[String, a] \ IO =
-            Result.mapErr(e ->
-                let sw = new StringWriter();
-                let pw = new PrintWriter(sw);
-                e.printStackTrace(pw);
-                sw.toString(),
+            Result.mapErr(
+                e ->
+                    let sw = new StringWriter();
+                    let pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    sw.toString(),
                 result
             )
 
         def lineIterator(rc: Region[r], reader: BufferedReader): Iterator[String, r + IO, r] \ r =
-            Iterator.iterate(rc, _ ->
-                let line = reader.readLine();
-                if (Object.isNull(line)) None
-                else Some(line),
+            Iterator.iterate(
+                rc,
+                _ ->
+                    let line = reader.readLine();
+                    if (Object.isNull(line))
+                        None
+                    else
+                        Some(line),
                 ""
             )
 
         pub def convert(inputFile: String, outputFile: String): Result[String, Unit] \ IO =
-            withReader(inputFile, reader ->
-                withWriter(outputFile, writer ->
-                    region rc {
-                        lineIterator(rc, reader)
-                            |> conversion
-                            |> Iterator.forEach(a -> {
-                                writer.write("${a}");
-                                writer.newLine()
-                            })
-                    }
-                )
+            withReader(
+                inputFile,
+                reader ->
+                    withWriter(
+                        outputFile,
+                        writer -> region rc {
+                            lineIterator(rc, reader)
+                                |> conversion
+                                |> Iterator.forEach(
+                                    a -> {
+                                        writer.write("${a}");
+                                        writer.newLine()
+                                    }
+                                )
+                        }
+                    )
             )
                 |> Result.flatten
                 |> inspectEx

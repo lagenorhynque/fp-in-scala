@@ -53,17 +53,17 @@ pub mod FpInFlix.Exercises.Monoids.Foldable {
     instance Foldable[Option] {
         pub redef foldRight(f: (a, b) -> b, acc: b, fa: Option[a]): b =
             match fa {
-                case None => acc
+                case None    => acc
                 case Some(a) => f(a, acc)
             }
         pub redef foldLeft(f: (b, a) -> b, acc: b, fa: Option[a]): b =
             match fa {
-                case None => acc
+                case None    => acc
                 case Some(a) => f(acc, a)
             }
         pub redef foldMap(f: a -> b, fa: Option[a]): b with Monoid[b] =
             match fa {
-                case None => Monoid.empty()
+                case None    => Monoid.empty()
                 case Some(a) => f(a)
             }
     }

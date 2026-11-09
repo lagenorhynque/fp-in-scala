@@ -46,7 +46,7 @@ pub mod FpInFlix.Exercises.IoMonad.Io3 {
         instance Functor[Console] {
             pub def map(f: a -> b \ ef, fa: Console[a]): Console[b] \ ef =
                 match fa {
-                    case ReadLine(g) => ReadLine(s -> unchecked_cast(f(g(s)) as _ \ {}))
+                    case ReadLine(g)        => ReadLine(s -> unchecked_cast(f(g(s)) as _ \ {}))
                     case PrintLine(s, next) => PrintLine(s, f(next))
                 }
         }
@@ -74,7 +74,7 @@ pub mod FpInFlix.Exercises.IoMonad.Io3 {
                     case Free.Pure(a) => (a, List.reverse(outBuf))
                     case Free.Free(ReadLine(next)) =>
                         match inBuf {
-                            case Nil => loop(next(None), Nil, outBuf)
+                            case Nil     => loop(next(None), Nil, outBuf)
                             case s :: ss => loop(next(Some(s)), ss, outBuf)
                         }
                     case Free.Free(PrintLine(line, next)) =>
@@ -83,7 +83,7 @@ pub mod FpInFlix.Exercises.IoMonad.Io3 {
             loop(expr, in, Nil)
 
         pub def exampleExpr(): Free[Console, Unit] =
-            forM(
+            forM (
                 _ <- printLn("Enter a temperature in degrees Fahrenheit: ");
                 d <- readLn() |> Functor.map(Option.flatMap(Float64.fromString));
                 _ <- printLn("In degrees Celsius: ${Option.map(fahrenheitToCelsius, d)}")

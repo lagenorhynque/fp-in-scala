@@ -6,7 +6,8 @@ pub mod FpInFlix.Exercises.Parsing.Parsers.ParseError {
     instance ToString[ParseError] {
         pub def toString(err: ParseError): String =
             let ParseError(es) = err;
-            if (List.isEmpty(es)) "no error message"
+            if (List.isEmpty(es))
+                "no error message"
             else
                 let collapsed = collapseStack(es);
                 let context =
@@ -14,15 +15,15 @@ pub mod FpInFlix.Exercises.Parsing.Parsers.ParseError {
                         |> List.last
                         |> Option.map(t -> "\n\n${t |> fst |> Location.currentLine}")
                         |> Option.getWithDefault("")
-                    +
-                    collapsed
-                        |> List.last
-                        |> Option.map(t -> "\n${t |> fst |> Location.columnCaret}")
-                        |> Option.getWithDefault("");
+                        + collapsed
+                            |> List.last
+                            |> Option.map(t -> "\n${t |> fst |> Location.columnCaret}")
+                            |> Option.getWithDefault("");
                 collapsed
-                    |> List.map(t ->
-                        let (loc, msg) = t;
-                        "${formatLoc(loc)} ${msg}"
+                    |> List.map(
+                        t ->
+                            let (loc, msg) = t;
+                            "${formatLoc(loc)} ${msg}"
                     )
                     |> List.join("\n")
                     + context
@@ -45,12 +46,13 @@ pub mod FpInFlix.Exercises.Parsing.Parsers.ParseError {
     def collapseStack(s: List[(Location, String)]): List[(Location, String)] =
         s
             |> List.groupBy(fst)
-            |> List.map(xs ->
-                (xs |> Nel.head |> fst, xs |> Nel.map(snd) |> Nel.join("; "))
+            |> List.map(
+                xs -> (xs |> Nel.head |> fst, xs |> Nel.map(snd) |> Nel.join("; "))
             )
-            |> List.sortBy(t ->
-                let Location({offset | _}) = fst(t);
-                offset
+            |> List.sortBy(
+                t ->
+                    let Location({offset | _}) = fst(t);
+                    offset
             )
 
     def formatLoc(loc: Location): String =

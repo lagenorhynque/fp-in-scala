@@ -27,25 +27,27 @@ pub mod FpInFlix.Exercises.Parallelism.Par {
     */
 
     pub def map2(f: (a, b) -> c, pa: Par[a], pb: Par[b]): Par[c] =
-        Par(es ->
-            let Par(fa) = pa;
-            let af = fa(es);
-            let Par(fb) = pb;
-            let bf = fb(es);
-            unitFuture(f(af.get(), bf.get()))
+        Par(
+            es ->
+                let Par(fa) = pa;
+                let af = fa(es);
+                let Par(fb) = pb;
+                let bf = fb(es);
+                unitFuture(f(af.get(), bf.get()))
         )
 
     pub def fork(pa: Lazy[Par[a]]): Par[a] =
-        Par(es ->
-            let cf = (new CompletableFuture(): CompletableFuture[a]);
-            let task = new Runnable {
-                def $run(_this: Runnable): Unit \ IO =
-                    let Par(f) = force pa;
-                    let v = f(es).get();
-                    discard cf.complete(v)
-            };
-            discard es.submit(task);
-            checked_cast(cf)
+        Par(
+            es ->
+                let cf = (new CompletableFuture(): CompletableFuture[a]);
+                let task = new Runnable {
+                    def $run(_this: Runnable): Unit \ IO =
+                        let Par(f) = force pa;
+                        let v = f(es).get();
+                        discard cf.complete(v)
+                };
+                discard es.submit(task);
+                checked_cast(cf)
         )
 
     /*
@@ -77,7 +79,7 @@ pub mod FpInFlix.Exercises.Parallelism.Par {
 
     pub def sequenceRight(pas: List[Par[a]]): Par[List[a]] =
         match pas {
-            case Nil => unit(Nil)
+            case Nil          => unit(Nil)
             case head :: tail => map2(List.cons, head, fork(lazy sequenceRight(tail)))
         }
 
@@ -100,11 +102,12 @@ pub mod FpInFlix.Exercises.Parallelism.Par {
         )
 
     pub def flatMap(f: a -> Par[b], pa: Par[a]): Par[b] =
-        Par(es ->
-            let Par(fa) = pa;
-            let a = fa(es).get();
-            let Par(fb) = f(a);
-            fb(es)
+        Par(
+            es ->
+                let Par(fa) = pa;
+                let a = fa(es).get();
+                let Par(fb) = f(a);
+                fb(es)
         )
 
     pub def runWithThreadPool(pa: Par[a]): a \ IO =

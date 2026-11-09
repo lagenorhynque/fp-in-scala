@@ -12,17 +12,21 @@ pub mod FpInFlix.Exercises.Applicative.Traversable {
             Traversable.traverse(identity, fga)
 
         pub def mapAccum(f: (a, s) -> (b, s), s: s, fa: f[a]): (f[b], s) =
-            traverse(a ->
-                Monad.flatMap(s1 ->
-                    let (b, s2) = f(a, s1);
-                    Functor.map(_ ->
-                        b,
-                        State.set(s2)
+            traverse(
+                a ->
+                    Monad.flatMap(
+                        s1 ->
+                            let (b, s2) = f(a, s1);
+                            Functor.map(
+                                _ ->
+                                    b,
+                                State.set(s2)
+                            ),
+                        State.get()
                     ),
-                    State.get()
-                ),
                 fa
-            ) |> State.runState(s)
+            )
+                |> State.runState(s)
     }
 
     pub def zipWithIndex(fa: f[a]): f[(a, Int32)] with Traversable[f] =
@@ -30,16 +34,17 @@ pub mod FpInFlix.Exercises.Applicative.Traversable {
 
     pub def reverse(fa: f[a]): f[a] with Traversable[f] =
         fa
-            |> Traversable.mapAccum((_, xs) ->
-                (unchecked_cast(Option.getOrAbort(List.head(xs)) as _ \ {}), List.drop(1, xs)),
+            |> Traversable.mapAccum(
+                (_, xs) -> (unchecked_cast(Option.getOrAbort(List.head(xs)) as _ \ {}), List.drop(1, xs)),
                 fa |> Foldable.toList |> List.reverse
             )
             |> fst
 
     instance Traversable[List] {
         pub redef traverse(f: a -> g[b], fa: List[a]): g[List[b]] with Applicative[g] =
-            List.foldRight((a, acc) ->
-                Applicative.map2(List.cons, f(a), acc),
+            List.foldRight(
+                (a, acc) ->
+                    Applicative.map2(List.cons, f(a), acc),
                 Applicative.unit(Nil),
                 fa
             )
@@ -47,8 +52,9 @@ pub mod FpInFlix.Exercises.Applicative.Traversable {
 
     instance Traversable[Option] {
         pub redef traverse(f: a -> g[b], fa: Option[a]): g[Option[b]] with Applicative[g] =
-            Option.foldLeft((_, a) ->
-                a |> f |> Functor.map(Some),
+            Option.foldLeft(
+                (_, a) ->
+                    a |> f |> Functor.map(Some),
                 Applicative.unit(None),
                 fa
             )
@@ -56,8 +62,9 @@ pub mod FpInFlix.Exercises.Applicative.Traversable {
 
     instance Traversable[Map[k]] with Order[k] {
         pub redef traverse(f: a -> g[b], fa: Map[k, a]): g[Map[k, b]] with Applicative[g] =
-            Map.foldLeftWithKey((acc, k, a) ->
-                Applicative.map2((m, b) -> Map.insert(k, b, m), acc, f(a)),
+            Map.foldLeftWithKey(
+                (acc, k, a) ->
+                    Applicative.map2((m, b) -> Map.insert(k, b, m), acc, f(a)),
                 Applicative.unit(Map.empty()),
                 fa
             )

@@ -7,11 +7,14 @@ pub mod FpInFlix.Exercises.GettingStarted.PolymorphicFunctions {
     pub def findFirst(p: a -> Bool, xs: Vector[a]): Int32 =
         @Tailrec
         def loop(n) =
-            if (n >= Vector.size(xs)) -1
-            // If the function `p` matches the current element,
-            // we've found a match and we return its index in the array.
-            else if (xs |> Vector.get(n) |> p) n
-            else loop(n + 1);
+            if (n >= Vector.size(xs))
+                -1
+                // If the function `p` matches the current element,
+                // we've found a match and we return its index in the array.
+            else if (xs |> Vector.get(n) |> p)
+                n
+            else
+                loop(n + 1);
         loop(0)
 
     // Exercise 2.2: Implement a polymorphic function to check whether
@@ -19,9 +22,12 @@ pub mod FpInFlix.Exercises.GettingStarted.PolymorphicFunctions {
     pub def isSorted(gt: (a, a) -> Bool, xs: Vector[a]): Bool =
         @Tailrec
         def go(n) =
-            if (n >= Vector.size(xs) - 1) true
-            else if (gt(Vector.get(n, xs), Vector.get(n + 1, xs))) false
-            else go(n + 1);
+            if (n >= Vector.size(xs) - 1)
+                true
+            else if (gt(Vector.get(n, xs), Vector.get(n + 1, xs)))
+                false
+            else
+                go(n + 1);
         go(0)
 
     // Polymorphic functions are often so constrained by their type
@@ -29,7 +35,6 @@ pub mod FpInFlix.Exercises.GettingStarted.PolymorphicFunctions {
 
     pub def partial1(a: a, f: (a, b) -> c): b -> c =
         b -> f(a, b)
-
 
     // Exercise 2.3: Implement `curry`.
 

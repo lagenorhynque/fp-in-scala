@@ -1,12 +1,12 @@
 pub mod FpInFlix.Exercises.State.Rng {
-   pub enum Rng(Int64) with Eq, ToString
+    pub enum Rng(Int64) with Eq, ToString
 
-   pub def nextInt(rng: Rng): (Int32, Rng) =
-       let Rng(seed) = rng;
-       let newSeed = Int64.bitwiseAnd(seed * 25214903917i64 + 11i64, 281474976710655i64);
-       let nextRng = Rng(newSeed);
-       let n = Int64.rightShift(newSeed, 16) |> Int64.truncateToInt32;
-       (n, nextRng)
+    pub def nextInt(rng: Rng): (Int32, Rng) =
+        let Rng(seed) = rng;
+        let newSeed = Int64.bitwiseAnd(seed * 25214903917i64 + 11i64, 281474976710655i64);
+        let nextRng = Rng(newSeed);
+        let n = Int64.rightShift(newSeed, 16) |> Int64.truncateToInt32;
+        (n, nextRng)
 
     pub type alias Rand[a] = Rng -> (a, Rng)
 

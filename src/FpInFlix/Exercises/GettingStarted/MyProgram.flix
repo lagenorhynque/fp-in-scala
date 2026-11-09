@@ -3,8 +3,10 @@
 /// A documentation comment!
 pub mod FpInFlix.Exercises.GettingStarted.MyProgram {
     pub def abs(x: Int32): Int32 =
-        if (x < 0) -x
-        else x
+        if (x < 0)
+            -x
+        else
+            x
 
     def formatAbs(x: Int32): String =
         "The absolute value of ${x} is ${abs(x)}"
@@ -16,8 +18,10 @@ pub mod FpInFlix.Exercises.GettingStarted.MyProgram {
     pub def factorial(n: Int32): Int32 =
         @Tailrec
         def go(x, acc) =
-            if (x <= 0) acc
-            else go(x - 1, x * acc);
+            if (x <= 0)
+                acc
+            else
+                go(x - 1, x * acc);
         go(n, 1)
 
     // Another implementation of `factorial`, this time with a `foreach` loop
@@ -34,8 +38,10 @@ pub mod FpInFlix.Exercises.GettingStarted.MyProgram {
     pub def fib(n: Int32): Int32 =
         @Tailrec
         def go(x, current, next) =
-            if (x <= 0) current
-            else go(x - 1, next, current + next);
+            if (x <= 0)
+                current
+            else
+                go(x - 1, next, current + next);
         go(n, 0, 1)
 
     // This definition and `formatAbs` are very similar..
