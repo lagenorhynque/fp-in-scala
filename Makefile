@@ -61,11 +61,23 @@ test-scala:
 # Flix
 
 .PHONY: lint-flix
-lint-flix: check-flix
+lint-flix: check-flix flix-format-check
 
-.PHONY: flix-check
+.PHONY: check-flix
 check-flix:
 	@flix check
+
+# `flix format` has no --check mode: it rewrites in place and says nothing, so
+# the check is whether it had anything to rewrite. It therefore reports any
+# unstaged change to a .flix file, not only a misformatted one.
+.PHONY: flix-format-check
+flix-format-check:
+	@flix format
+	@git diff --exit-code -- '*.flix'
+
+.PHONY: flix-format-fix
+flix-format-fix:
+	@flix format
 
 .PHONY: compile-flix
 compile-flix:
